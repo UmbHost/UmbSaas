@@ -60,6 +60,9 @@
     <Reference Include="CSharpTest.Net.Collections, Version=14.906.1403.1082, Culture=neutral, PublicKeyToken=06aee00cce822474, processorArchitecture=MSIL">
       <HintPath>..\packages\CSharpTest.Net.Collections.14.906.1403.1082\lib\net40\CSharpTest.Net.Collections.dll</HintPath>
     </Reference>
+    <Reference Include="Diplo.GodMode, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Diplo.GodMode.2.1.0\lib\net45\Diplo.GodMode.dll</HintPath>
+    </Reference>
     <Reference Include="Examine, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Examine.1.1.0\lib\net452\Examine.dll</HintPath>
     </Reference>
@@ -335,6 +338,38 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Plugins\DiploGodMode\BackOffice\Css\godMode.css" />
+    <Content Include="App_Plugins\DiploGodMode\BackOffice\GodModeTree\contentBrowser.html" />
+    <Content Include="App_Plugins\DiploGodMode\BackOffice\GodModeTree\dataTypeBrowser.html" />
+    <Content Include="App_Plugins\DiploGodMode\BackOffice\GodModeTree\diagnosticBrowser.html" />
+    <Content Include="App_Plugins\DiploGodMode\BackOffice\GodModeTree\docTypeBrowser.html" />
+    <Content Include="App_Plugins\DiploGodMode\BackOffice\GodModeTree\godModeHeader.html" />
+    <Content Include="App_Plugins\DiploGodMode\BackOffice\GodModeTree\intro.html" />
+    <Content Include="App_Plugins\DiploGodMode\BackOffice\GodModeTree\mediaBrowser.html" />
+    <Content Include="App_Plugins\DiploGodMode\BackOffice\GodModeTree\memberBrowser.html" />
+    <Content Include="App_Plugins\DiploGodMode\BackOffice\GodModeTree\partialBrowser.html" />
+    <Content Include="App_Plugins\DiploGodMode\BackOffice\GodModeTree\reflectionBrowser.html" />
+    <Content Include="App_Plugins\DiploGodMode\BackOffice\GodModeTree\templateBrowser.html" />
+    <Content Include="App_Plugins\DiploGodMode\BackOffice\GodModeTree\typeBrowser.html" />
+    <Content Include="App_Plugins\DiploGodMode\BackOffice\GodModeTree\typesIntro.html" />
+    <Content Include="App_Plugins\DiploGodMode\BackOffice\GodModeTree\usageBrowser.html" />
+    <Content Include="App_Plugins\DiploGodMode\BackOffice\GodModeTree\utilityBrowser.html" />
+    <Content Include="App_Plugins\DiploGodMode\BackOffice\Scripts\GodMode.Config.js" />
+    <Content Include="App_Plugins\DiploGodMode\BackOffice\Scripts\GodMode.ContentBrowser.Controller.js" />
+    <Content Include="App_Plugins\DiploGodMode\BackOffice\Scripts\GodMode.DataTypeBrowser.Controller.js" />
+    <Content Include="App_Plugins\DiploGodMode\BackOffice\Scripts\GodMode.DiagnosticBrowser.Controller.js" />
+    <Content Include="App_Plugins\DiploGodMode\BackOffice\Scripts\GodMode.DocTypeBrowser.Controller.js" />
+    <Content Include="App_Plugins\DiploGodMode\BackOffice\Scripts\GodMode.Intro.Controller.js" />
+    <Content Include="App_Plugins\DiploGodMode\BackOffice\Scripts\GodMode.MediaBrowser.Controller.js" />
+    <Content Include="App_Plugins\DiploGodMode\BackOffice\Scripts\GodMode.MemberBrowser.Controller.js" />
+    <Content Include="App_Plugins\DiploGodMode\BackOffice\Scripts\GodMode.PartialBrowser.Controller.js" />
+    <Content Include="App_Plugins\DiploGodMode\BackOffice\Scripts\GodMode.ReflectionBrowser.Controller.js" />
+    <Content Include="App_Plugins\DiploGodMode\BackOffice\Scripts\GodMode.Resources.js" />
+    <Content Include="App_Plugins\DiploGodMode\BackOffice\Scripts\GodMode.TemplateBrowser.Controller.js" />
+    <Content Include="App_Plugins\DiploGodMode\BackOffice\Scripts\GodMode.TypeBrowser.Controller.js" />
+    <Content Include="App_Plugins\DiploGodMode\BackOffice\Scripts\GodMode.TypesIntro.Controller.js" />
+    <Content Include="App_Plugins\DiploGodMode\BackOffice\Scripts\GodMode.UsageBrowser.Controller.js" />
+    <Content Include="App_Plugins\DiploGodMode\BackOffice\Scripts\GodMode.UtilityBrowser.Controller.js" />
     <Content Include="App_Plugins\Skybrud.Umbraco.Redirects\Lang\da-DK.xml" />
     <Content Include="App_Plugins\Skybrud.Umbraco.Redirects\Lang\en-GB.xml" />
     <Content Include="App_Plugins\Skybrud.Umbraco.Redirects\Lang\en-US.xml" />
@@ -426,6 +461,7 @@
     <Content Include="config\uSync8.config" />
     <Content Include="App_Plugins\uSync8\package.manifest" />
     <Content Include="App_Plugins\uSync8\addons.json" />
+    <Content Include="App_Plugins\DiploGodMode\package.manifest" />
     <None Include="packages.config" />
     <Content Include="Views\Web.config" />
     <Content Include="Views\Partials\Grid\Editors\Textstring.cshtml" />
