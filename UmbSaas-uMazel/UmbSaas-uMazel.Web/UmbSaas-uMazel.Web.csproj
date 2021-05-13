@@ -160,6 +160,9 @@
     <Reference Include="Our.Umbraco.FriendlyRobots, Version=1.1.0.1, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Our.Umbraco.FriendlyRobots.1.1.0\lib\net472\Our.Umbraco.FriendlyRobots.dll</HintPath>
     </Reference>
+    <Reference Include="Our.Umbraco.TheDashboard, Version=8.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Our.Umbraco.TheDashboard.8.0.2\lib\Our.Umbraco.TheDashboard.dll</HintPath>
+    </Reference>
     <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
     </Reference>
@@ -370,6 +373,16 @@
     <Content Include="App_Plugins\DiploGodMode\BackOffice\Scripts\GodMode.TypesIntro.Controller.js" />
     <Content Include="App_Plugins\DiploGodMode\BackOffice\Scripts\GodMode.UsageBrowser.Controller.js" />
     <Content Include="App_Plugins\DiploGodMode\BackOffice\Scripts\GodMode.UtilityBrowser.Controller.js" />
+    <Content Include="App_Plugins\Our.Umbraco.TheDashboard\Lang\da-DK.xml" />
+    <Content Include="App_Plugins\Our.Umbraco.TheDashboard\Lang\en-GB.xml" />
+    <Content Include="App_Plugins\Our.Umbraco.TheDashboard\Lang\en-US.xml" />
+    <Content Include="App_Plugins\Our.Umbraco.TheDashboard\Lang\es-ES.xml" />
+    <Content Include="App_Plugins\Our.Umbraco.TheDashboard\Lang\nb-NO.xml" />
+    <Content Include="App_Plugins\Our.Umbraco.TheDashboard\Lang\nl-NL.xml" />
+    <Content Include="App_Plugins\Our.Umbraco.TheDashboard\Lang\sv-SE.xml" />
+    <Content Include="App_Plugins\Our.Umbraco.TheDashboard\TheDashboard.controller.js" />
+    <Content Include="App_Plugins\Our.Umbraco.TheDashboard\TheDashboard.css" />
+    <Content Include="App_Plugins\Our.Umbraco.TheDashboard\TheDashboard.html" />
     <Content Include="App_Plugins\Skybrud.Umbraco.Redirects\Lang\da-DK.xml" />
     <Content Include="App_Plugins\Skybrud.Umbraco.Redirects\Lang\en-GB.xml" />
     <Content Include="App_Plugins\Skybrud.Umbraco.Redirects\Lang\en-US.xml" />
@@ -472,6 +485,7 @@
     <Content Include="App_Plugins\Umbicosaurus\thesaurus.schema.json" />
     <Content Include="App_Plugins\Umbicosaurus\thesaurus.json" />
     <Content Include="App_Plugins\Umbicosaurus\package.manifest" />
+    <Content Include="App_Plugins\Our.Umbraco.TheDashboard\package.manifest" />
     <None Include="packages.config" />
     <Content Include="Views\Web.config" />
     <Content Include="Views\Partials\Grid\Editors\Textstring.cshtml" />
