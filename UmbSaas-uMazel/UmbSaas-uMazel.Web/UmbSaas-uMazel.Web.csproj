@@ -144,6 +144,12 @@
     <Reference Include="NPoco, Version=3.9.4.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\NPoco.3.9.4\lib\net45\NPoco.dll</HintPath>
     </Reference>
+    <Reference Include="Our.Umbraco.Extensions.Routing, Version=1.0.0.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Our.Umbraco.Extensions.Routing.1.0.0\lib\net472\Our.Umbraco.Extensions.Routing.dll</HintPath>
+    </Reference>
+    <Reference Include="Our.Umbraco.FriendlyRobots, Version=1.1.0.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Our.Umbraco.FriendlyRobots.1.1.0\lib\net472\Our.Umbraco.FriendlyRobots.dll</HintPath>
+    </Reference>
     <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
     </Reference>
@@ -179,6 +185,15 @@
     </Reference>
     <Reference Include="Serilog.Sinks.Map, Version=1.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
       <HintPath>..\packages\Serilog.Sinks.Map.1.0.0\lib\netstandard2.0\Serilog.Sinks.Map.dll</HintPath>
+    </Reference>
+    <Reference Include="Skybrud.Essentials, Version=1.1.26.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Skybrud.Essentials.1.1.26\lib\net48\Skybrud.Essentials.dll</HintPath>
+    </Reference>
+    <Reference Include="Skybrud.Umbraco.Redirects, Version=2.0.7.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Skybrud.Umbraco.Redirects.2.0.7\lib\net472\Skybrud.Umbraco.Redirects.dll</HintPath>
+    </Reference>
+    <Reference Include="Skybrud.WebApi.Json, Version=1.0.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Skybrud.WebApi.Json.1.0.4\lib\net45\Skybrud.WebApi.Json.dll</HintPath>
     </Reference>
     <Reference Include="Superpower, Version=1.0.0.0, Culture=neutral, PublicKeyToken=aec39280ded1b3a7, processorArchitecture=MSIL">
       <HintPath>..\packages\Superpower.2.0.0\lib\net45\Superpower.dll</HintPath>
@@ -279,6 +294,28 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Plugins\Skybrud.Umbraco.Redirects\Lang\da-DK.xml" />
+    <Content Include="App_Plugins\Skybrud.Umbraco.Redirects\Lang\en-GB.xml" />
+    <Content Include="App_Plugins\Skybrud.Umbraco.Redirects\Lang\en-US.xml" />
+    <Content Include="App_Plugins\Skybrud.Umbraco.Redirects\Scripts\Controllers\Dashboards\Default.js" />
+    <Content Include="App_Plugins\Skybrud.Umbraco.Redirects\Scripts\Controllers\Dialogs\Redirect.js" />
+    <Content Include="App_Plugins\Skybrud.Umbraco.Redirects\Scripts\Controllers\Editors\Destination.js" />
+    <Content Include="App_Plugins\Skybrud.Umbraco.Redirects\Scripts\Controllers\Editors\Inbound.js" />
+    <Content Include="App_Plugins\Skybrud.Umbraco.Redirects\Scripts\Controllers\Editors\OriginalUrl.js" />
+    <Content Include="App_Plugins\Skybrud.Umbraco.Redirects\Scripts\Controllers\Editors\Outbound.js" />
+    <Content Include="App_Plugins\Skybrud.Umbraco.Redirects\Scripts\Controllers\Editors\RadioGroup.js" />
+    <Content Include="App_Plugins\Skybrud.Umbraco.Redirects\Scripts\Controllers\Editors\Site.js" />
+    <Content Include="App_Plugins\Skybrud.Umbraco.Redirects\Scripts\Services\RedirectsService.js" />
+    <Content Include="App_Plugins\Skybrud.Umbraco.Redirects\Styles\Styles.css" />
+    <Content Include="App_Plugins\Skybrud.Umbraco.Redirects\Styles\Styles.min.css" />
+    <Content Include="App_Plugins\Skybrud.Umbraco.Redirects\Views\Dashboard.html" />
+    <Content Include="App_Plugins\Skybrud.Umbraco.Redirects\Views\Dialogs\Redirect.html" />
+    <Content Include="App_Plugins\Skybrud.Umbraco.Redirects\Views\Editors\Destination.html" />
+    <Content Include="App_Plugins\Skybrud.Umbraco.Redirects\Views\Editors\Inbound.html" />
+    <Content Include="App_Plugins\Skybrud.Umbraco.Redirects\Views\Editors\OriginalUrl.html" />
+    <Content Include="App_Plugins\Skybrud.Umbraco.Redirects\Views\Editors\Outbound.html" />
+    <Content Include="App_Plugins\Skybrud.Umbraco.Redirects\Views\Editors\RadioGroup.html" />
+    <Content Include="App_Plugins\Skybrud.Umbraco.Redirects\Views\Editors\Site.html" />
     <Content Include="config\grid.editors.config.js" />
     <Content Include="config\Lang\cs-CZ.user.xml" />
     <Content Include="config\Lang\da-DK.user.xml" />
@@ -317,6 +354,7 @@
     <Content Include="config\HealthChecks.config" />
     <Content Include="config\ClientDependency.config" />
     <Content Include="config\BackOfficeTours\getting-started.json" />
+    <Content Include="App_Plugins\Skybrud.Umbraco.Redirects\package.manifest" />
     <None Include="packages.config" />
     <Content Include="Views\Web.config" />
     <Content Include="Views\Partials\Grid\Editors\Textstring.cshtml" />
