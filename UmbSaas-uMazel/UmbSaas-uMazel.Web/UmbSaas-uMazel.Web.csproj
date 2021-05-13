@@ -392,6 +392,13 @@
     <Content Include="App_Plugins\Skybrud.Umbraco.Redirects\Views\Editors\Outbound.html" />
     <Content Include="App_Plugins\Skybrud.Umbraco.Redirects\Views\Editors\RadioGroup.html" />
     <Content Include="App_Plugins\Skybrud.Umbraco.Redirects\Views\Editors\Site.html" />
+    <Content Include="App_Plugins\Umbicosaurus\img\035-crying.svg" />
+    <Content Include="App_Plugins\Umbicosaurus\img\038-think-animated.svg" />
+    <Content Include="App_Plugins\Umbicosaurus\img\038-think.svg" />
+    <Content Include="App_Plugins\Umbicosaurus\img\049-happy.png" />
+    <Content Include="App_Plugins\Umbicosaurus\umbicosaurus.css" />
+    <Content Include="App_Plugins\Umbicosaurus\umbicosaurus.iconpicker.html" />
+    <Content Include="App_Plugins\Umbicosaurus\umbicosaurus.js" />
     <Content Include="App_Plugins\uSync8\backoffice\uSync8\dashboard.html" />
     <Content Include="App_Plugins\uSync8\backoffice\uSync8\uSyncDashboardController.js" />
     <Content Include="App_Plugins\uSync8\changeDialog.html" />
@@ -462,6 +469,9 @@
     <Content Include="App_Plugins\uSync8\package.manifest" />
     <Content Include="App_Plugins\uSync8\addons.json" />
     <Content Include="App_Plugins\DiploGodMode\package.manifest" />
+    <Content Include="App_Plugins\Umbicosaurus\thesaurus.schema.json" />
+    <Content Include="App_Plugins\Umbicosaurus\thesaurus.json" />
+    <Content Include="App_Plugins\Umbicosaurus\package.manifest" />
     <None Include="packages.config" />
     <Content Include="Views\Web.config" />
     <Content Include="Views\Partials\Grid\Editors\Textstring.cshtml" />
