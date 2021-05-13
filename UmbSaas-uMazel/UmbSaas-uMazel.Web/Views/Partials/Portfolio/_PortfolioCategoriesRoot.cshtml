@@ -1,0 +1,17 @@
+﻿@using Site.Core.ViewModels;
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<IEnumerable<PortfolioItemCategoryViewModel>>
+
+@if (!Model.Any()) { return; }
+@{ bool isFirst = true; }
+
+<div class="row">
+    <ul class="container-filter categories-filter">
+        @foreach (PortfolioItemCategoryViewModel item in Model)
+        {
+            string cssClass = (isFirst) ? "categories active" : "categories";
+            <li><a class="@cssClass" data-filter="@item.Filter">@item.Title</a></li>
+            isFirst = false;
+        }
+    </ul>
+</div>

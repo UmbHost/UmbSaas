@@ -1,0 +1,83 @@
+﻿@using System.Collections.Specialized;
+@using DotSee.ResponsiveImages
+@using DotSee.Common.Link;
+@using DotSee.Common
+@using Site.Core
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<Umbraco.Core.Models.Blocks.BlockListItem>
+
+@{
+    SectionIntroStaticImageBlock currSection = Model.Content as SectionIntroStaticImageBlock;
+    SectionIntroStaticImageBlockSettings settings = Model.Settings as SectionIntroStaticImageBlockSettings;
+
+    SrcSetManager ssm = new SrcSetManager(currSection.Image, "backgroundfull");
+    string sectionClasses = Utils.ConcatCssClasses(new string[] {
+        "media-wapper cont-h-100per"
+        , SiteUtils.GetOverlayCssClass((int)currSection.Overlay)
+        , ssm.GetClassName()
+    });
+
+    string textClasses = Utils.ConcatCssClasses(new string[] {
+        "content-caption"
+        , (currSection.UseLightTextColor) ? "light-color" : "dark-color"
+        , "parallax"
+        , currSection.Parallax ? "parallax-background1" : null
+        , currSection.FadeText ? "parallax-opacity" : null
+        , currSection.KeepTextVisible ? "parallax-section1" : null
+    });
+
+    string buttonClasses = Utils.ConcatCssClasses(new string[] {
+        "btn"
+        , SiteUtils.GetButtonSize(settings)
+        , SiteUtils.GetButtonFill(settings) ?? "btn-white"
+    });
+
+    bool hasLink = (currSection.LinkButtons != null && currSection.LinkButtons.Count() != 0);
+
+    string nextSectionId = SiteUtils.GetFirstBlockKey(Umbraco.AssignedContentItem);
+}
+
+@ssm.GetBreakPointsCss()
+
+<section id="section_@currSection.Key.ToString()" class="full-intro full-screen-intro hero">
+
+    <div class="@sectionClasses" style="background-size:cover;"></div>
+
+    <div class="full-cap-wraper">
+        <div class="@textClasses">
+
+            <div class="container">
+                <h1>@currSection.SectionTitle</h1>
+                <h5>@currSection.Subtitle</h5>
+                <div class="row">
+                    <p class="lead col-md-8 col-md-offset-2">@Html.Raw(currSection.Summary.Replace("\n", "<br/>"))</p>
+                </div>
+                <br>
+                @if (hasLink)
+                {
+                    LinkItem link = currSection.LinkButtons.First().Content.GetLink();
+    
+                    <div>
+                        @Link.GetLinkMarkup(item: currSection.LinkButtons.First().Content,
+                            attributes: new ListDictionary() { { "class", buttonClasses } })
+                    </div>
+
+                }
+
+            </div>
+        </div>
+    </div>
+
+    @if (!string.IsNullOrEmpty(nextSectionId))
+    {
+        <div class="intro-scroll-down">
+            <a class="scroll-down" href="#section_@nextSectionId">
+                <span class="mouse">
+                    <span class="mouse-dot"></span>
+                </span>
+            </a>
+        </div>
+    }
+
+</section>
+<div class="clearfix"></div>

@@ -1,0 +1,56 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage
+
+@using Site.Core;
+
+@{
+    IPublishedContent currPage = Model;
+    ConfigCookieSettings cookiePage = CachedNodes.GetCookieSettingsNode();
+
+    if (cookiePage == null || cookiePage.DisableCookieConsent) { return; }
+
+    // Color settings:
+    string bgColor = cookiePage.BackgroundColor ?? "237afc";
+    string txtColor = cookiePage.TextColor ?? "fff";
+    string buttonsColor = cookiePage.ButtonsColor ?? "fff";
+
+    // Literals:
+    string title = 
+        !string.IsNullOrEmpty(cookiePage.Title) ? 
+        cookiePage.Title : Umbraco.GetDictionaryValue("Misc.CookieDialogTitle");
+    string message = 
+        !string.IsNullOrEmpty(cookiePage.Message) ? 
+        cookiePage.Message : Umbraco.GetDictionaryValue("Misc.CookieDialogMessage");
+    string allowAllButtonText = 
+        !string.IsNullOrEmpty(cookiePage.AllowAllButtonText) ? 
+        cookiePage.AllowAllButtonText : Umbraco.GetDictionaryValue("Misc.CookieDialogAllowAll");
+    string allowNoneButtonText = 
+        !string.IsNullOrEmpty(cookiePage.AllowNoneButtonText) ? 
+        cookiePage.AllowNoneButtonText : Umbraco.GetDictionaryValue("Misc.CookieDialogAllowNone");
+    string moreInfoBtnText = 
+        !string.IsNullOrEmpty(cookiePage.MoreInfoButtonText) ? 
+        cookiePage.MoreInfoButtonText : string.Empty;
+    
+    // Configuration page URL:
+    string cookiesUrl = 
+        cookiePage.CookiesPageUrl != null ? 
+        cookiePage.CookiesPageUrl.Url() : string.Empty;
+
+}
+
+<script type="text/javascript">
+
+    $(function () {
+        var cookiedialog = $.cookiedialog({
+            popup_title: '@title',
+            popup_text: '@message',
+            allow_all_button_text: '@allowAllButtonText',
+            allow_none_button_text: '@allowNoneButtonText',
+            cookies_page_button_text: '@moreInfoBtnText',
+            cookie_settings_url: '@cookiesUrl',
+            background_color: '#@bgColor',
+            text_color: '#@txtColor',
+            buttons_color: '@buttonsColor'
+        });
+    });
+
+</script>

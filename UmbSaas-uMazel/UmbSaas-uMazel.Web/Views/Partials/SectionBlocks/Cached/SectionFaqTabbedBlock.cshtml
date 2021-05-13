@@ -1,0 +1,64 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<Umbraco.Core.Models.Blocks.BlockListItem>
+
+@using Site.Core;
+@using DotSee.Common;
+
+@{
+    SectionFaqTabbedBlock currSection = Model.Content as SectionFaqTabbedBlock;
+    SectionFaqTabbedBlockSettings settings = Model.Settings as SectionFaqTabbedBlockSettings;
+
+    string cssClass = Utils.ConcatCssClasses(
+        new string[] {
+          settings.GetSectionEffectCssClass()
+        , settings.GetSectionPtb()
+        , settings.GetSectionMtb()
+        });
+
+    string faqTabCss = "faqtab-" + currSection.Key.ToString();
+    
+}
+
+<section id="section_@currSection.Key.ToString()" class="@cssClass">
+    <div class="container">
+
+        @Html.Partial(MVC.Shared.Views.Molecules._SectionBlockTitle, Model)
+
+        <div class="tabs b-lrb-none">
+            <ul>
+                @foreach (BlockFaqTabItem item in currSection.Items.Select(x => x.Content))
+                {
+                    string icon = (item.Icon == null) ? "" : item.Icon.ToString();
+                    <li>
+                        <a href="#tabs-@item.Key">
+                            @if (!string.IsNullOrEmpty(icon))
+                            {
+                                <i class="@icon left"></i>
+                            }
+                            @item.Title
+                        </a>
+                    </li>
+                }
+            </ul>
+            <div class="ui-tab-content">
+                @foreach (BlockFaqTabItem item in currSection.Items.Select(x => x.Content))
+                {
+                    string faqCss = "faq-" + item.Key.ToString();
+                    <div id="tabs-@item.Key" class="plr-0">
+
+                        <div class="accordion @faqCss @faqTabCss">
+                            @foreach (BlockFaqItem faqItem in item.Items.Select(x => x.Content))
+                            {
+                                <div class="accordion-section @faqCss @faqTabCss">
+                                    <h6 class="accordion-title @faqCss @faqTabCss">@faqItem.Question</h6>
+                                    <div class="accordion-content @faqCss @faqTabCss">
+                                        @faqItem.Answer
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>

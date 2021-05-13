@@ -1,0 +1,32 @@
+﻿@inherits  UmbracoViewPage<Umbraco.Core.Models.Blocks.BlockListItem>
+
+@{
+    var isMulticol = (ViewData["isMultiCol"] ?? "0").ToString();
+
+    switch (Model.Content.ContentType.Alias)
+    {
+
+        default:
+            var controllerContext = Html.ViewContext.Controller.ControllerContext;
+            var cdfResult = ViewEngines.Engines.FindPartialView(controllerContext, "SectionCdf/" + Model.Content.ContentType.Alias + "Cdf");
+            if (cdfResult.View != null)
+            {
+                @Html.Partial("SectionCdf/" + Model.Content.ContentType.Alias + "Cdf", Model)
+            }
+
+            var sectionResult = ViewEngines.Engines.FindPartialView(controllerContext, "SectionBlocks/Cached/" + Model.Content.ContentType.Alias);
+            if (sectionResult.View != null)
+            {
+                @Html.CachedPartial("SectionBlocks/Cached/" + Model.Content.ContentType.Alias, Model, 600, false, false
+                               , contextualKeyBuilder: (m, viewData) => Model.Content.Key.ToString() + System.Threading.Thread.CurrentThread.CurrentUICulture.NativeName.ToString()
+                               , viewData: new ViewDataDictionary { { "isMultiCol", isMulticol }, { "multiColCss", ViewData["multiColCss"] ?? "" } })
+            }
+            else
+            {
+                @Html.Partial("SectionBlocks/Uncached/" + Model.Content.ContentType.Alias, Model
+                                      , viewData: new ViewDataDictionary { { "isMultiCol", isMulticol }, { "multiColCss", ViewData["multiColCss"] ?? "" } })
+            }
+            break;
+    }
+
+}

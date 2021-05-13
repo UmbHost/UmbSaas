@@ -1,0 +1,15 @@
+﻿@inherits  UmbracoViewPage<Umbraco.Core.Models.Blocks.BlockListItem>
+@{
+    switch (Model.Content.ContentType.Alias)
+    {
+        default:
+            var controllerContext = Html.ViewContext.Controller.ControllerContext;
+            var result = ViewEngines.Engines.FindPartialView(controllerContext, "SectionScripts/" + Model.Content.ContentType.Alias + "Scripts");
+            if (result.View != null)
+            {
+                @Html.Partial("SectionScripts/" + Model.Content.ContentType.Alias + "Scripts", Model)
+            }
+
+            break;
+    }
+}

@@ -1,0 +1,54 @@
+﻿@using Umbraco.Web.PublishedModels;
+@using System.Configuration;
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage
+
+@{
+    if (!(Model is IAbstractPageSections)) { return; }
+
+    var introBlock = (Model as IAbstractPageSections).IntroSection;
+    if (introBlock.Any(x => (x.Content as IAbstractSectionBlock).Disabled == false))
+    {
+        @Html.Partial(MVC.Shared.Views.Common._RenderSectionScripts, introBlock.Where(x => !(x.Content as IAbstractSectionBlock).Disabled).FirstOrDefault())
+    }
+
+    var blocks = (Model as IAbstractPageSections).Sections;
+    if (!blocks.Any()) { return; }
+
+    bool unifySectionScripts = ConfigurationManager.AppSettings.Get("UnifySectionScripts")?.ToLower() == "true";
+    System.Text.StringBuilder sb = new System.Text.StringBuilder(string.Empty);
+
+    foreach (var block in blocks.Where(x => (x.Content as IAbstractSectionBlock).Disabled == false))
+    {
+        if (block.Content.ContentType.Alias.Equals(SectionMultiColBlock.ModelTypeAlias))
+        {
+            foreach (var innerBlock in (block.Content as SectionMultiColBlock).Items)
+            {
+                sb.Append
+                (Html.Partial(MVC.Shared.Views.Common._RenderSectionScripts, innerBlock));
+            }
+        }
+        else
+        {
+            sb.Append
+            (Html.Partial(MVC.Shared.Views.Common._RenderSectionScripts, block));
+        }
+    }
+
+    if (unifySectionScripts)
+    {
+        sb.Replace("<script type=\"text/javascript\">", "");
+        sb.Replace("<script>", "");
+        sb.Replace("</script>", "");
+        sb.Replace("\r\n\r\n", "\r\n");
+
+        @Html.Raw("<script type=\"text/javascript\">")
+        @Html.Raw(sb.ToString())
+        @Html.Raw("</script>")
+    }
+    else
+    {
+        @Html.Raw(sb.ToString())
+    }
+
+}

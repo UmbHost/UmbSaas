@@ -1,0 +1,11 @@
+﻿@using DotSee.Common;
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<PageArticleItem>
+@{
+    int numberOfChars = (Model.Ancestor<PageBlogList>().SummariesMaxLength == 0) ? 300 : Model.Ancestor<PageBlogList>().SummariesMaxLength;
+    if (Model.Ancestor<PageBlogList>().HideSummaries) { return; }
+    string summary = string.IsNullOrEmpty(Model.Summary) ? Html.StripHtml(Model.Content).ToString() : Model.Summary;
+    <div class="post-entry">
+        @Html.Raw(string.Format("<p>{0}</p>", summary.TruncateAtWord(numberOfChars)))
+    </div>
+}

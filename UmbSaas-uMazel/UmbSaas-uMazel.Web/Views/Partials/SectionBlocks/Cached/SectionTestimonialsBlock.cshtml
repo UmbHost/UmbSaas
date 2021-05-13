@@ -1,0 +1,52 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<Umbraco.Core.Models.Blocks.BlockListItem>
+
+@using Site.Core;
+@using DotSee.ResponsiveImages;
+@using DotSee.Common;
+
+@{
+    SectionTestimonialsBlock currSection = Model.Content as SectionTestimonialsBlock;
+    SectionTestimonialsBlockSettings settings = Model.Settings as SectionTestimonialsBlockSettings;
+
+    SrcSetManager ssm = new SrcSetManager(currSection.Image, "backgroundfull");
+
+    string carouselColorCss = (currSection.UseLightTextColor) ? "white" : "dark";
+
+    @ssm.GetBreakPointsCss()
+
+    string sectionClasses = Utils.ConcatCssClasses(new string[] {
+              settings.GetSectionEffectCssClass()
+            , SiteUtils.GetOverlayCssClass((int)currSection.Overlay)
+            , (currSection.UseLightTextColor) ? "dark-bg" : "light-bg"
+            , ssm.GetClassName()
+            , settings.GetSectionPtb()
+            , settings.GetSectionMtb()
+        });
+
+    string itemClasses = Utils.ConcatCssClasses(new string[]
+    {
+        "testimonial dark-color"
+        ,"text-" + (string.IsNullOrEmpty(settings.TextOrientation) ? "center" : settings.TextOrientation.ToLower())
+                    });
+}
+
+<section id="section_@currSection.Key.ToString()" class="@sectionClasses">
+    <div class="container">
+        <div class="owl-carousel testimonial-carousel nf-carousel-theme @carouselColorCss" data-autoheight="1" data-singleitem="1">
+
+            @foreach (BlockTestimonialItem item in currSection.Items.Select(x=>x.Content))
+            {
+                string additionalInfo = item.AuthorAdditionalInfo;
+                if (!string.IsNullOrEmpty(additionalInfo)) { additionalInfo = " ( " + additionalInfo + " )"; }
+
+                <div class="item">
+                    <div class="@itemClasses">
+                        <div class="container-icon"><i class="fa fa-quote-right"></i></div>
+                        <p class="lead">@item.Lead</p>
+                        <h6 class="quote-author">@item.Title<span style="font-weight: 400;">@additionalInfo</span></h6>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>

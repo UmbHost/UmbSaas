@@ -1,0 +1,33 @@
+﻿@using DotSee.Common;
+@using Umbraco.Web.PublishedModels;
+@using ClientDependency.Core.Mvc;
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<PageProductsList>
+
+@{
+    string culture = System.Threading.Thread.CurrentThread.CurrentUICulture.Name;
+
+    Html.RequiresJs("/scripts/plugin/imagesloaded.pkgd.min.js", CdfPriority.Medium, CdfGroup.PartiallyUsed);
+    Html.RequiresJs("/scripts/plugin/jquery.fs.tipper.min.js", CdfPriority.Medium, CdfGroup.PartiallyUsed);
+
+    Layout = "siteTemplate.cshtml";
+    PageProductsList currPage = Model;
+}
+
+@Html.Action(MVC.PageBackgroundImage.ActionNames.Index, MVC.PageBackgroundImage.Name, new { culture = culture })
+
+<section id="shop-item" class="ptb ptb-sm-80">
+    <div class="container">
+
+        @Html.Partial(MVC.Partials.Views.Products._ProductSortSelector, Model)
+
+        <!-- Shop Item -->
+        <div class="row container-grid">
+
+            @Html.Action(MVC.ProductsList.ActionNames.Index, MVC.ProductsList.Name, new { model = Model })
+        </div>
+        <!-- End Shop Item -->
+    </div>
+
+    @Html.Action(MVC.ProductsList.ActionNames.GetPager, MVC.ProductsList.Name, new { model = Model })
+</section>

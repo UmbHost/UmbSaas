@@ -1,0 +1,18 @@
+﻿@using DotSee.Common.Link;
+@using System.Collections.Specialized;
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<IPublishedElement>
+
+@{
+    if (Model == null) { return; }
+    LinkItem link = Model.GetLink();
+}
+
+@if (string.IsNullOrEmpty(link.Url))
+{
+    @link.Caption
+}
+else
+{
+    @Model.GetLinkMarkup(attributes: new ListDictionary() { { "class", ViewData["buttonClasses"] } })
+}

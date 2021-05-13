@@ -1,0 +1,18 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<PagePortfolioItem>
+
+@if (!string.IsNullOrEmpty(Model.VideoUrl))
+{
+
+    string videoUrl = Model.VideoUrl;
+
+    if (videoUrl.ToLower().Contains("youtube.com"))
+    {
+        @Html.Partial(MVC.Partials.Views.Portfolio._PortfolioVideoYouTube, Model)
+    }
+
+    else if (videoUrl.ToLower().Contains("vimeo.com"))
+    {
+
+        @Html.Partial(MVC.Partials.Views.Portfolio._PortfolioVideoYouTube, Model)
+    }
+}

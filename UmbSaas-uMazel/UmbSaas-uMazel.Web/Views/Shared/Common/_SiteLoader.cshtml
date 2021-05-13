@@ -1,0 +1,19 @@
+﻿@using DotSee.Common;
+@using Site.Core;
+@using ClientDependency.Core.Mvc;
+
+@inherits  UmbracoViewPage
+@{
+    ConfigGlobalSettings configPage = CachedNodes.GetConfigNode();
+
+    if (configPage.LoadingAnimation)
+    {
+        Html.RequiresJs("/scripts/siteloader.js", CdfPriority.First, CdfGroup.Essentials);
+
+        <section id="preloader">
+            <div class="loader" id="loader">
+                <div class="loader-img"></div>
+            </div>
+        </section>
+    }
+}

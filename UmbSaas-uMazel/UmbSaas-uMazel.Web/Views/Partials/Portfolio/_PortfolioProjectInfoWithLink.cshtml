@@ -1,0 +1,19 @@
+﻿@using DotSee.Common
+@using DotSee.Common.Link
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<PagePortfolioItem>
+
+@{ 
+    var link = Model.Link.First().GetLink();
+}
+<div class="row mb-60 mb-xs-30">
+    <div class="col-md-8">
+        <h4>@Model.GetPageTitleInternal()</h4>
+        <p class="mt-15">
+            @Html.Raw(Model.Summary)
+        </p>
+    </div>
+    <div class="col-md-4 mb-30">
+        @link.GetMarkup(customClass: "btn btn-lg btn-black float-right float-none-sm", altCaption: $"<i class=\"fa fa-link left\"></i>{link.Caption}</a>")
+    </div>
+</div>

@@ -1,0 +1,6 @@
+﻿@inherits  UmbracoViewPage
+
+<input type="hidden" id="culture" name="culture" value="@System.Threading.Thread.CurrentThread.CurrentCulture" />
+<input type="hidden" id="pageno" name="pageno" value="1" />
+<input type="hidden" id="pageid" name="pageid" value="@Model.Id" />
+<input type="hidden" id="recordsperpage" name="recordsperpage" value="@ViewData["recordsperpage"]" />

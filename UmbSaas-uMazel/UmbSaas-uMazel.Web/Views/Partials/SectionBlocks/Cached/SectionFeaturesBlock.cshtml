@@ -1,0 +1,60 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<Umbraco.Core.Models.Blocks.BlockListItem>
+
+@using Site.Core;
+@using DotSee.Common.Link;
+
+@{
+    SectionFeaturesBlock currSection = Model.Content as SectionFeaturesBlock;
+    SectionFeaturesBlockSettings settings = Model.Settings as SectionFeaturesBlockSettings;
+}
+
+<section id="section_@currSection.Key.ToString()" class="@settings.GetSectionPtb() @settings.GetSectionMtb()">
+    <div class="container text-center">
+
+        @Html.Partial(MVC.Shared.Views.Molecules._SectionBlockTitle, Model)
+
+        <p class="lead">@currSection.Subtitle</p>
+        <div class="spacer-60"></div>
+        <div class="row">
+            <div class="wow fadeInLeft col-md-4 pt-15 pt-sm-0">
+
+                @foreach (BlockFeatureItem item in currSection.ItemsLeftSide.Select(x => x.Content))
+                {
+                    //if (!item.Position.Equals("Left")) { continue; }
+                    @DisplayFeature(item, true)
+                }
+            </div>
+            <div class="wow fadeIn col-md-4 hidden-sm hidden-xs text-center">
+                <img src="@currSection.CenterImage.GetCropUrl(width:350, imageCropMode:global::Umbraco.Web.Models.ImageCropMode.Max)" />
+            </div>
+            <div class="wow fadeInRight col-md-4 pt-15 pt-sm-0">
+
+                @foreach (BlockFeatureItem item in currSection.ItemsRightSide.Select(x => x.Content))
+                {
+                    //if (!item.Position.Equals("Right")) { continue; }
+                    @DisplayFeature(item, false)
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+@helper DisplayFeature(BlockFeatureItem item, bool isLeft)
+{
+    string position = (isLeft) ? "right" : "left";
+
+    <div class="features-box-@position">
+
+        @{
+            IHtmlString linkCaption = Html.Partial(MVC.Shared.Views.Molecules._SectionFeatures_LinkCaption, item, new ViewDataDictionary() { { "position", position } });
+        }
+        @if (item.Link != null && item.Link.Count() != 0)
+        {
+            @item.GetLinkMarkup(altCaption: linkCaption)
+        }
+        else
+        {
+            @linkCaption
+        }
+    </div>
+}

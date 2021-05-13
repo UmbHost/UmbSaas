@@ -1,0 +1,29 @@
+﻿@using DotSee.Common
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<PagePortfolioItem>
+@{
+    int skip = 0;
+
+    if (!Model.DoNotShowLargeFirstImage)
+    {
+        skip = 1;
+        string fullFirstImageUrl = Model.ImageGallery.First().GetCropUrl(width: 1150, height: 766, upScale: true);
+
+        <div class="row">
+            <div class="col-md-12 nf-item spacing-grid">
+                <img class="item-container" src="@fullFirstImageUrl" alt="@Model.GetPageTitleInternal()">
+            </div>
+        </div>
+    }
+}
+<div class="row container-masonry nf-col-2">
+    @foreach (IPublishedContent image in Model.ImageGallery.Skip(skip))
+    {
+        string fullImageUrl = image.GetCropUrl(width: 550, upScale: true);
+
+        <div class="col-md-6 col-sm-6 col-xs-12 nf-item spacing-grid">
+            <img class="item-container" src="@fullImageUrl" alt="@Model.GetPageTitleInternal()">
+        </div>
+    }
+</div>
+

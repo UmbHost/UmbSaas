@@ -1,0 +1,44 @@
+﻿@using DotSee.Common;
+@using DotSee.PageMetas;
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<PageArticleItem>
+
+
+@{
+    if (Model.Ancestor<PageBlogList>().HideAuthors || Model.Author == null) { return; }
+
+    foreach (PageBlogAuthor a in Model.Author)
+    {
+        string authorImageUrl = (a.AuthorImage != null) ? a.AuthorImage.GetCropUrl(width: 80) : "/img/user-av.jpg";
+
+        <hr />
+        <div class="post-author">
+            <div class="row">
+                <div class="post-author-img col-xs-12 col-sm-2 mb-sm-15">
+                    <img alt="author" src="@authorImageUrl">
+                </div>
+                <div class="post-author-details col-xs-12 col-sm-10 ml-0">
+                    <h6>@a.GetPageTitleForMenu()</h6>
+
+
+                    @a.AuthorSummary
+
+
+                    <ul class="social">
+                        @foreach (NcSocialLink sl in a.SocialLinks)
+                        {
+                            @RenderSocialLink(sl.Link, sl.Style.ToString())
+                        }
+                    </ul>
+
+                </div>
+            </div>
+        </div> }
+}
+
+@helper RenderSocialLink(string link, string service)
+{if (string.IsNullOrEmpty(link)) { return; }
+    if (!link.StartsWith("http")) { link = "https://" + link; }
+
+    <li><a target="_blank" href="@link"><i class="@service"></i></a></li>
+}

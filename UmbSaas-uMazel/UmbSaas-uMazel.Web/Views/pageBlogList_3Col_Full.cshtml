@@ -1,0 +1,16 @@
+﻿@using DotSee.SiteBlog;
+@using DotSee.Common;
+@using ClientDependency.Core.Mvc;
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<PageBlogListViewModel>
+
+@{
+    Layout = "siteTemplate.cshtml";
+
+    Html.RequiresJs("/scripts/plugin/jquery.stellar.min.js", CdfPriority.Medium, CdfGroup.PartiallyUsed);
+    Html.RequiresCss("/Css/plugin/jquery.fs.tipper.css", CdfPriority.Medium, CdfGroup.PartiallyUsed);
+    Html.RequiresJs("/scripts/plugin/jquery.fs.tipper.min.js", CdfPriority.Medium, CdfGroup.PartiallyUsed);
+
+    if (!Model.Items.Any()) { return; }
+    @Html.Partial(MVC.Shared.Views.Organisms._BlogList_3PerRow, Model)
+}

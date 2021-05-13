@@ -1,0 +1,76 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<Umbraco.Core.Models.Blocks.BlockListItem>
+
+@using Site.Core;
+@using DotSee.Common;
+
+@{
+    SectionMultiColBlock currSection = Model.Content as SectionMultiColBlock;
+    SectionMultiColBlockSettings settings = Model.Settings as SectionMultiColBlockSettings;
+
+    string cssSectionClass = Utils.ConcatCssClasses(new string[] {
+          settings.GetSectionEffectCssClass()
+        , settings.GetSectionPtb()
+        , settings.GetSectionMtb()
+             });
+
+    int sectionsCount = currSection.Items.Count();
+
+    string cssClass = "";
+    switch (sectionsCount)
+    {
+
+        case 1:
+            cssClass = "col-md-12";
+            break;
+        case 2:
+            cssClass = "col-md-6";
+            break;
+        case 3:
+            cssClass = "col-md-4";
+            break;
+        case 4:
+            cssClass = "col-md-3";
+            break;
+        default:
+            cssClass = "col-md-4";
+            break;
+    }
+
+}
+
+<section id="section_@currSection.Key.ToString()" class="@cssSectionClass">
+    <div class="container">
+
+        <div class="row">
+            @Html.Partial(MVC.Shared.Views.Molecules._SectionBlockTitle, Model)
+
+            @{foreach (var widget in currSection.Items)
+                {
+                    switch (widget.Content.ContentType.Alias)
+                    {
+                        case SectionPercentagesBlock.ModelTypeAlias:
+                            <div class="@cssClass">
+                                @Html.Partial(MVC.Shared.Views.Common._RenderBlock, widget, new ViewDataDictionary { { "isMultiCol", "1" } })
+                            </div>
+                            break;
+                        case SectionTextBlock.ModelTypeAlias:
+                            <div class="@cssClass">
+                                @Html.Partial(MVC.Shared.Views.Common._RenderBlock, widget, new ViewDataDictionary { { "isMultiCol", "1" } })
+                            </div>
+                            break;
+                        case SectionAccordionBlock.ModelTypeAlias:
+                            <div class="@cssClass">
+                                @Html.Partial(MVC.Shared.Views.Common._RenderBlock, widget, new ViewDataDictionary { { "isMultiCol", "1" } })
+                            </div>
+                            break;
+                        case SectionFaqBlock.ModelTypeAlias:
+                            <div class="@cssClass">
+                                @Html.Partial(MVC.Shared.Views.Common._RenderBlock, widget, new ViewDataDictionary { { "isMultiCol", "1" } })
+                            </div>
+                            break;
+                    }
+                }
+            }
+        </div>
+    </div>
+</section>

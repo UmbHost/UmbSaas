@@ -1,0 +1,21 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<PagePortfolioItem>
+
+@if (Model.ImageGallery != null)
+{
+    bool isSingleImage = Model.ImageGallery.Count() == 1;
+    if (isSingleImage)
+    {
+        @Html.Partial(MVC.Partials.Views.Portfolio._PortfolioTopImageSingle, Model)
+    }
+    else
+    {
+        if (Model.ShowImagesAsList)
+        {
+            @Html.Partial(MVC.Partials.Views.Portfolio._PortfolioTopImageList, Model)
+        }
+        else
+        {
+            @Html.Partial(MVC.Partials.Views.Portfolio._PortfolioTopImageSlider, Model)
+        }
+    }
+}

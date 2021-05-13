@@ -1,0 +1,57 @@
+﻿@using DotSee.SiteBlog;
+@using Umbraco.Web.PublishedModels;
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<PageBlogListViewModel>
+@{
+    bool noSideBar = Model.BlogRoot.SidebarOptions.ToLower().Contains("none");
+    string sidebar = noSideBar ? "0" : "1";
+    bool sidebarLeft = Model.BlogRoot.SidebarOptions.ToLower().Contains("left");
+}
+
+<section class="ptb-60 ptb-sm-60">
+    <div class="container">
+        <div class="row">
+            @if (noSideBar)
+            {
+                
+            <div class="row">
+                @Html.Partial(MVC.Partials.Views.Blog._BlogFilterMessage, Model)
+                @RenderList(sidebar)
+            </div>
+            }
+            else
+            {
+                if (sidebarLeft)
+                {
+                    @Html.Partial(MVC.Partials.Views.Blog._BlogSidebar, Model.BlogRoot)
+                    <div class="col-lg-9 col-md-9">
+                        @Html.Partial(MVC.Partials.Views.Blog._BlogFilterMessage, Model)
+                        <div class="row">
+                            @RenderList(sidebar)
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="col-lg-9 col-md-9">
+                        @Html.Partial(MVC.Partials.Views.Blog._BlogFilterMessage, Model)
+                        <div class="row">
+                            @RenderList(sidebar)
+                        </div>
+                    </div>
+                    @Html.Partial(MVC.Partials.Views.Blog._BlogSidebar, Model.BlogRoot)
+
+                }
+            }
+            @Html.Partial(MVC.Shared.Views.Common._PagePager, Model)
+        </div>
+    </div>
+</section>
+
+@helper RenderList(string sidebar)
+{
+    foreach (PageArticleItem blogArticle in Model.Items.OrderByDescending(x => x.GetPostDateForSorting()))
+    {
+        @Html.Partial(MVC.Partials.Views.Blog._BlogItem, blogArticle, new ViewDataDictionary { { "imagesConfig", "blogimages" }, { "itemsPerRow", 1 }, { "sidebar", sidebar } })
+    }
+}

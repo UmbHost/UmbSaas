@@ -1,0 +1,14 @@
+﻿@using DotSee.Common
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<PagePortfolioItem>
+
+<div class="row mb-60 mb-xs-30">
+    <div class="col-md-6">
+        <h4>@Model.GetPageTitleInternal()</h4>
+    </div>
+    <div class="col-md-6">
+        <p class="lead">
+            @Html.Raw(Model.Summary)
+        </p>
+    </div>
+</div>

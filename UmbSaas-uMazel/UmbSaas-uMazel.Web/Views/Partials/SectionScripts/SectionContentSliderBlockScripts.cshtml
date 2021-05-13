@@ -1,0 +1,22 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<Umbraco.Core.Models.Blocks.BlockListItem>
+
+@{
+    SectionContentSliderBlock currSection = Model.Content as SectionContentSliderBlock;
+    SectionContentSliderBlockSettings settings = Model.Settings as SectionContentSliderBlockSettings;
+}
+
+<script type="text/javascript">
+        $(document).ready(function () {
+            $('#section_' + '@currSection.Key.ToString()' + ' .content-carousel').owlCarousel({
+                autoPlay: @((!settings.ManualPlay).ToString().ToLower()),
+                autoHeight: @settings.AutoHeight.ToString().ToLower(),
+                stopOnHover: @settings.StopOnHover.ToString().ToLower(),
+                slideSpeed: (@settings.SlideSpeed== 0 ? 400 : @settings.SlideSpeed),
+                singleItem: true,
+                pagination: @settings.ShowBullets.ToString().ToLower(),  // Show pagination buttons
+                navigation: @settings.ShowNavigationButtons.ToString().ToLower(),  // Hide next and prev buttons
+                navigationText: ["<i class='fa fa-angle-left'></i>", "<i class='fa fa-angle-right'></i>"],
+                responsive: true
+            });
+        });
+</script>

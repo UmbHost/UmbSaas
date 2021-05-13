@@ -1,0 +1,76 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<PageArticleItem>
+@using DotSee.Common;
+@using DotSee.SiteBlog;
+@using DotSee.ResponsiveImages;
+@using ClientDependency.Core.Mvc;
+
+@{
+    Layout = "siteTemplate.cshtml";
+
+    Html.RequiresCss("/Css/plugin/jquery.fs.tipper.css", CdfPriority.Medium, CdfGroup.PartiallyUsed);
+    Html.RequiresJs("/scripts/plugin/jquery.fs.tipper.min.js", CdfPriority.Medium, CdfGroup.PartiallyUsed);
+
+    PageArticleItem currPage = (PageArticleItem)Model;
+
+    PageBlogList blogRoot = currPage.Ancestor<PageBlogList>();
+    PageBlogAuthor author = currPage.Author as PageBlogAuthor;
+    string sectionCss = "ptb ptb-sm-60";
+    bool noSideBar = blogRoot.SidebarOptions.ToLower().Contains("none") || blogRoot.SidebarOptions.ToLower().Contains("only on this page");
+    bool sidebarLeft = blogRoot.SidebarOptions.ToLower().Contains("left");
+    string cssClass = (noSideBar) ? "col-lg-12 col-md-12 blog-post-hr" : "col-lg-9 col-md-9 blog-post-hr";
+    string imageConf = (noSideBar) ? "blogimagesfull" : "blogimages";
+
+    string culture = System.Threading.Thread.CurrentThread.CurrentUICulture.Name;
+
+}
+
+@Html.Action(MVC.PageBackgroundImage.ActionNames.Index, MVC.PageBackgroundImage.Name, new { culture = culture })
+
+<section class="@sectionCss">
+    <div class="container">
+        <div class="row">
+            @if (!noSideBar && sidebarLeft)
+            {
+                @Html.Partial(MVC.Partials.Views.Blog._BlogSidebar, blogRoot)
+            }
+
+            <div class="@cssClass">
+                <div class="blog-post mb-30">
+
+                    @Html.Partial(MVC.Partials.Views.Blog._BlogAuthorAndDate, currPage)
+
+                    <div class="post-header">
+                        <h2>@currPage.GetPageTitleInternal()</h2>
+                    </div>
+
+                    @{ IPublishedContent image = currPage.Image;
+                        if (image != null)
+                        {
+                            SrcSetManager ssm = new SrcSetManager(image, imageConf);
+
+                            <div class="post-media">
+                                @ssm.CreatePictureElement(currPage.GetPageTitleInternal())
+                            </div>
+                        }
+                    }
+
+                    <div class="post-entry">
+                        @currPage.Content
+                    </div>
+
+                    @Html.Partial(MVC.Partials.Views.Blog._BlogTags, currPage)
+                    @Html.Partial(MVC.Partials.Views.Blog._BlogArticleCategories, currPage)
+                </div>
+
+                @Html.Partial(MVC.Partials.Views.Blog._BlogAuthorBottom, currPage)
+
+                @Html.Partial(MVC.Partials.Views.Blog._BlogDisqus, currPage)
+            </div>
+
+            @if (!noSideBar && !sidebarLeft)
+            {
+                @Html.Partial(MVC.Partials.Views.Blog._BlogSidebar, blogRoot)
+            }
+        </div>
+    </div>
+</section>

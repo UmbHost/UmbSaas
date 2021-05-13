@@ -1,0 +1,29 @@
+﻿@using DotSee.PageMetas;
+@using System.Collections.Specialized;
+@using DotSee.PageMetas.ViewModels;
+@using System.Collections.Specialized;
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<IEnumerable<HreflangViewModel>>
+
+@{
+
+    foreach (HreflangViewModel item in Model)
+    {
+        @RenderHreflangTag(item)
+    }
+
+}
+
+@helper RenderHreflangTag(HreflangViewModel item)
+{
+    if (item.IsDefault)
+    {
+        <link rel="canonical" href="@item.CanonicalUrl" />
+    }
+    if (item.IsCurrent)
+    {
+        <link href="@item.Url" hreflang="@item.CultureName" rel="x-default" />
+    }
+
+    <link href="@item.Url" hreflang="@item.CultureName" rel="alternate" />
+}

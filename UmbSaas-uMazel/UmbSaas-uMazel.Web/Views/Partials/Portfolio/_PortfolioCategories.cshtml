@@ -1,0 +1,17 @@
+﻿@using Site.Core
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<PagePortfolioItem>
+
+@{
+    var portfolioRoot = Model.AncestorOrSelf<PagePortfolio>();
+
+    if (!Model.Categories.Any() || portfolioRoot.DoNotDisplayCategories || Model.DoNotDisplayCategories)
+    {
+        return;
+    }
+}
+<p>
+    <strong class="dark-color">@Umbraco.GetDictionaryValue("Portfolio.Categories") :</strong>@Model.GetPortfolioCategoryNames()
+</p>
+
+

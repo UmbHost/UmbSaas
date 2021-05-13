@@ -1,0 +1,75 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<Umbraco.Core.Models.Blocks.BlockListItem>
+
+@using Site.Core;
+@using DotSee.Common;
+
+@{
+    SectionPricingBlock currSection = Model.Content as SectionPricingBlock;
+    SectionPricingBlockSetings settings = Model.Settings as SectionPricingBlockSetings;
+
+    string cssClass = Utils.ConcatCssClasses(
+new string[] {
+          settings.GetSectionEffectCssClass()
+        , settings.GetSectionPtb()
+        , settings.GetSectionMtb()
+    });
+
+    string buttonClasses = Utils.ConcatCssClasses(new string[] {
+        "btn"
+        , SiteUtils.GetButtonSize(settings)
+        , SiteUtils.GetButtonFill(settings) ?? "btn-black"
+    });
+}
+
+<section id="section_@currSection.Key.ToString()" class="@cssClass">
+    <div class="container text-center">
+
+        @Html.Partial(MVC.Shared.Views.Molecules._SectionBlockTitle, Model)
+
+        <div class="row dflex">
+
+            @{
+                //Adjust the boostrap column span based on number of items.
+                //Up to 4 items are supported.
+                int childrenCount = currSection.Items.Count();
+                if (childrenCount > 4) { childrenCount = 4; }
+                var bootstrapCols = 12 / childrenCount;
+
+                foreach (BlockPricingItem item in currSection.Items.Select(x=>x.Content))
+                {
+
+                    string pricingBoxClass = (item.Highlight) ? "Pricing-box highlight" : "Pricing-box";
+
+                    <div class="col-md-@bootstrapCols mb-30 dflex">
+                        <div class="@pricingBoxClass">
+                            <div class="price-title spacing-box">
+                                <h4>@item.Title</h4>
+                            </div>
+                            <hr />
+                            <div class="spacing-box pricebox">
+                                <div class="price"><span class="price-sm">@item.Currency</span><span class="price-lg">@item.Price</span></div>
+                                <div class="price-tenure" style="margin-top:8px;">@item.Period</div>
+                            </div>
+                            <hr />
+                            <div class="pricing-features spacing-grid">
+                                @item.Description
+                            </div>
+                            <hr />
+                            <div class="spacing-grid mt-auto">
+                                @if (item.Link.Any())
+                                {
+                                    @Html.Partial(MVC.Shared.Views.Molecules._LinkButton, item.Link.FirstOrDefault().Content, new ViewDataDictionary { { "buttonClasses", buttonClasses } })
+                                }
+                                else
+                                {
+                                    @item.AltLabel
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</section>
+

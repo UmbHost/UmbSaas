@@ -1,0 +1,12 @@
+﻿<?xml version='1.0' encoding='UTF-8' ?>
+@using uw = Umbraco.Web;
+@using Umbraco.Core.Composing;
+@inherits Umbraco.Web.Mvc.UmbracoViewPage
+@{ Layout = null;
+Response.ContentType = "text/xml"; }
+<sitemapindex xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/siteindex.xsd"
+              xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    @Html.Action(MVC.Sitemap.ActionNames.SitemapIndex, MVC.Sitemap.Name)
+    
+</sitemapindex>

@@ -1,0 +1,114 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<ContactViewModel>
+@using Site.Core.Models
+@using DotSee.Common.Link;
+
+@{
+    bool hideSubject = Model.HideSubject;
+    bool hideName = Model.HideName;
+    string[] dropDown1Data = Model.DropDown1Values;
+    string[] dropDown2Data = Model.DropDown2Values;
+    string reCaptchaSiteKey = Model.ReCaptchaSiteKey;
+}
+
+<div class="row">
+    <div id="contactFormMessages" class="ptb-0 col-md-6 col-md-offset-3 text-center">
+
+        <h6 id="contactSuccess" class="successContent">
+            <i class="fa fa-check left" style="color: #5cb45d;"></i>@Umbraco.GetDictionaryValue("ContactForm.Success")
+        </h6>
+
+        <h6 class="errorContent">
+            <i class="fa fa-exclamation-circle left" style="color: #e1534f;"></i>@Umbraco.GetDictionaryValue("ContactForm.Failure")
+        </h6>
+
+    </div>
+
+    <div id="contactFormHolder" class="col-md-6 col-md-offset-3">
+        @using (Ajax.BeginForm("Submit", "ContactSurface", new AjaxOptions
+        {
+            HttpMethod = "POST",
+            OnFailure = "ShowContactError",
+            OnSuccess = "ShowContactSuccess"
+        }, new
+        {
+            @id = "contactForm"
+        }))
+        {
+
+            @Html.AntiForgeryToken()
+
+            @Html.HiddenFor(model => model.MailTo)
+            @Html.HiddenFor(model => model.MailFrom)
+            @Html.HiddenFor(model => model.MailFromAlias)
+            @Html.HiddenFor(model => model.EmailBody)
+            @Html.HiddenFor(model => model.EmailSubject)
+
+            if (dropDown1Data != null && dropDown1Data.Any())
+            {
+                for (int i = 0; i < Model.DropDown1Values.Count(); i++)
+                {
+                    @Html.HiddenFor(model => Model.DropDown1Values[i])
+                }
+            }
+
+            if (dropDown2Data != null && dropDown1Data.Any())
+            {
+                for (int i = 0; i < Model.DropDown2Values.Count(); i++)
+                {
+                    @Html.HiddenFor(model => Model.DropDown2Values[i])
+                }
+            }
+
+            if (!hideName)
+            {
+                <div class="form-field-wrapper">
+                    @Html.TextBoxFor(model => model.Name, new { @Placeholder = Umbraco.GetDictionaryValue("ContactForm.Name"), @class = "input-sm form-full" })
+                </div>
+            }
+            <div class="form-field-wrapper">
+                @Html.TextBoxFor(model => model.Email, new { @Placeholder = Umbraco.GetDictionaryValue("ContactForm.Email"), @class = "input-sm form-full" })
+                @Html.ValidationMessageFor(model => model.Email, Umbraco.GetDictionaryValue("ContactForm.Email.Invalid"))
+            </div>
+            if (!hideSubject)
+            {
+                <div class="form-field-wrapper">
+                    @Html.TextBoxFor(model => model.Subject, new { @Placeholder = Umbraco.GetDictionaryValue("ContactForm.Subject"), @class = "input-sm form-full" })
+                </div>
+            }
+            <div class="form-field-wrapper">
+                @Html.TextAreaFor(model => model.Message, new { @Placeholder = Umbraco.GetDictionaryValue("ContactForm.Message"), @class = "form-full", @rows = 7 })
+                @Html.ValidationMessageFor(model => model.Message, Umbraco.GetDictionaryValue("ContactForm.Message.Required"))
+            </div>
+            if (dropDown1Data != null && dropDown1Data.Length > 1)
+            {
+                @Html.DropDownListFor(model => model.DropDown1, dropDown1Data.Select(f => new SelectListItem { Value = f, Text = f }).Skip(1), dropDown1Data[0], new { @class = "form-full" })
+            }
+            if (dropDown2Data != null && dropDown2Data.Length > 1)
+            {
+                @Html.DropDownListFor(model => model.DropDown2, dropDown2Data.Select(f => new SelectListItem { Value = f, Text = f }).Skip(1), dropDown2Data[0], new { @class = "form-full" })
+            }
+            <div class="form-check">
+                @Html.CheckBoxFor(x => x.Compliance, new { @class = "form-check-input required", @style = "-webkit-appearance: auto; margin-right: 5px;" })
+                <label class="form-check-label" for="Compliance">
+                    <small>
+                        @(Model.AcceptanceLiteral.IsNullOrWhiteSpace() ? Umbraco.GetDictionaryValue("ContactForm.Acceptance") : Model.AcceptanceLiteral)
+                        @if (Model.AcceptanceLink != null)
+                        {
+                            <u>@Model.AcceptanceLink.GetMarkup()</u>
+                        }
+                    </small>
+                </label>
+                <div>
+                    @Html.ValidationMessageFor(x => x.Compliance, Umbraco.GetDictionaryValue("ContactForm.Acceptance.Required"))
+                </div>
+            </div>
+            <div id="recaptcha"
+                 class="g-recaptcha"
+                 data-sitekey="@reCaptchaSiteKey"
+                 data-callback="onSubmit"
+                 data-size="invisible">
+            </div>
+            <button class="btn btn-md btn-black form-full" type="submit" id="form-submit" name="submit">@Umbraco.GetDictionaryValue("ContactForm.Submit")</button>
+        }
+    </div>
+</div>

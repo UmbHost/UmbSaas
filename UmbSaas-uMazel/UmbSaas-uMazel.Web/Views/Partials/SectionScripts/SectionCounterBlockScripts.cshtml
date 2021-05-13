@@ -1,0 +1,31 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<Umbraco.Core.Models.Blocks.BlockListItem>
+
+@{
+    SectionCounterBlock currSection = Model.Content as SectionCounterBlock;
+    SectionCounterBlockSettings settings = Model.Settings as SectionCounterBlockSettings;
+    decimal speed = settings.Speed == 0 ? 8000 : settings.Speed;
+    string easing = string.IsNullOrEmpty(settings.Easing) ? "linear" : settings.Easing;
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $('.counter').each(function () {
+        var $this = $(this),
+            countTo = $this.attr('data-count');
+        $({ countNum: $this.text() }).animate({
+            countNum: countTo
+        },
+        {
+            duration: @speed,
+            easing: '@easing',
+            step: function () {
+                $this.text(Math.floor(this.countNum));
+            },
+            complete: function () {
+                $this.text(this.countNum);
+            }
+        });
+    });
+    });
+</script>

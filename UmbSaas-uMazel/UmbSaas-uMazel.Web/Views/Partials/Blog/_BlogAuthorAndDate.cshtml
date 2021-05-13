@@ -1,0 +1,12 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<PageArticleItem>
+
+@{
+    //Respective partials do their own checks for hide authors / hide dates settings so no need to do anything here.
+
+    if (Model.Ancestor<PageBlogList>().HideAuthors && Model.Ancestor<PageBlogList>().HideDates) {return;}
+
+        <div class="post-meta">
+            @Html.Partial(MVC.Partials.Views.Blog._BlogAuthorLink, Model)
+            @Html.Partial(MVC.Partials.Views.Blog._BlogDate, Model)
+        </div>
+}

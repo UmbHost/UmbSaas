@@ -1,0 +1,101 @@
+﻿@using DotSee.ResponsiveImages
+@using DotSee.Common
+@using Site.Core
+@using DotSee.Common.Link;
+@using System.Collections.Specialized;
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<Umbraco.Core.Models.Blocks.BlockListItem>
+
+@{
+    SectionIntroVideoBlock currSection = Model.Content as SectionIntroVideoBlock;
+    SectionIntroVideoBlockSettings settings = Model.Settings as SectionIntroVideoBlockSettings;
+
+    SrcSetManager ssm = new SrcSetManager(settings.Image, "backgroundfull");
+    string sectionClasses = Utils.ConcatCssClasses(new string[] {
+        SiteUtils.GetOverlayCssClass((int)settings.Overlay)
+        , ssm.GetClassName()
+    });
+
+    string textClasses = Utils.ConcatCssClasses(new string[] {
+        "content-caption"
+        , (settings.UseLightTextColor) ? "light-color" : "dark-color"
+    });
+
+    string buttonClasses = Utils.ConcatCssClasses(new string[] {
+        "btn"
+        , SiteUtils.GetButtonSize(settings)
+        , SiteUtils.GetButtonFill(settings) ?? "btn-white"
+    });
+
+    //string nextSectionId = "";
+    //try
+    //{
+    //    nextSectionId = currSection
+    //        ?.Siblings()
+    //        .OrderBy(x => x.SortOrder)
+    //        ?.Where(x => x.SortOrder > currSection.SortOrder)
+    //        .FirstOrDefault()
+    //        ?.Id.ToString();
+    //}
+    //catch { }
+
+    string videoOptions =
+        "loop:" + (currSection.DisableLoop ? "false" : "true")
+        + ","
+        + "startAt:" + currSection.StartAt.ToString()
+        + ","
+        + ((currSection.StopAt == 0 || currSection.StopAt < currSection.StartAt) ? null : "stopAt:" + currSection.StopAt.ToString() + ",")
+        + "useOnMobile:" + (currSection.DisableVideoOnMobile ? "false" : "true")
+        + ","
+        + "opacity:" + currSection.Opacity.ToString();
+
+    bool hasLink = (currSection.LinkButtons != null && currSection.LinkButtons.Count() != 0);
+}
+
+@ssm.GetBreakPointsCss()
+
+<section id="section_@currSection.Key.ToString()" class="full-screen-intro @sectionClasses" style="background-size:cover;">
+
+
+    <div class="media-wapper">
+
+        <div id="video" class="ytp-player" data-property="{videoURL:'@currSection.YouTubeVideoUrl',containment:'#section_@currSection.Key.ToString()', showControls:false, autoPlay:true, mute:true, addRaster:false, quality:'default', @videoOptions }"></div>
+    </div>
+
+    <div class="full-cap-wraper">
+        <div class="@textClasses">
+
+            <div class="container">
+                <h1>@currSection.SectionTitle</h1>
+                <h5>@currSection.Subtitle</h5>
+                <div class="row">
+                    <p class="lead col-md-8 col-md-offset-2">@Html.Raw(currSection.Summary.Replace(Environment.NewLine, "<br/>"))</p>
+                </div>
+                <br>
+                @if (hasLink)
+                {
+                    LinkItem link = currSection.LinkButtons.First().Content.GetLink();
+                    <div>
+                        @Link.GetLinkMarkup(item: currSection.LinkButtons.First().Content,
+                            attributes: new ListDictionary() { { "class", buttonClasses } })
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    @*@if (!string.IsNullOrEmpty(nextSectionId))
+        {
+            <div class="intro-scroll-down">
+                <a class="scroll-down" href="#section_@nextSectionId">
+                    <span class="mouse">
+                        <span class="mouse-dot"></span>
+                    </span>
+                </a>
+            </div>
+        }*@
+
+</section>
+<div class="clearfix"></div>
+
+

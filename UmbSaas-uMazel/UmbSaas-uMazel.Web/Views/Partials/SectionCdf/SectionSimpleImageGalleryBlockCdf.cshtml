@@ -1,0 +1,18 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<Umbraco.Core.Models.Blocks.BlockListItem>
+
+@using Site.Core.ViewModels;
+@using DotSee.Common;
+@using ClientDependency.Core.Mvc
+
+@{
+    Html.RequiresJs("/scripts/plugin/isotope.pkgd.min.js", CdfPriority.Medium, CdfGroup.PartiallyUsed);
+    Html.RequiresJs("/scripts/plugin/masonry.pkgd.min.js", CdfPriority.Medium, CdfGroup.PartiallyUsed);
+    Html.RequiresJs("/scripts/plugin/imagesloaded.pkgd.min.js", CdfPriority.Medium, CdfGroup.PartiallyUsed);
+    Html.RequiresCss("/Css/plugin/colorbox.css", CdfPriority.Medium, CdfGroup.Section);
+    Html.RequiresJs("/scripts/plugin/jquery.colorbox-min.js", CdfPriority.Medium, CdfGroup.Section);
+    Html.RequiresCss("/Css/plugin/jquery.fs.tipper.css", CdfPriority.Medium, CdfGroup.Section);
+    Html.RequiresCss("~/Css/plugin/jquery.fancybox.css", CdfPriority.First, CdfGroup.Section);
+    Html.RequiresJs("/scripts/plugin/jquery.fs.tipper.min.js", CdfPriority.Medium, CdfGroup.Section);
+    Html.RequiresJs("/scripts/plugin/jquery.stellar.min.js", CdfPriority.Medium, CdfGroup.Section);
+    Html.RequiresJs("~/Scripts/plugin/jquery.fancybox.min.js", CdfPriority.First, CdfGroup.Section);
+}

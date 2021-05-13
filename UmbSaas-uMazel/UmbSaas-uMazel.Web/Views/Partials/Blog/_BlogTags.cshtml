@@ -1,0 +1,15 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<PageArticleItem>
+
+@{
+        if (Model.Ancestor<PageBlogList>().HideTags) { return; }
+       
+        if (Model.Tags.Any())
+        {
+        <div class="post-tag pull-left">
+            @foreach (string t in Model.Tags)
+    {
+                <span><a href="@(Model.Ancestor<PageBlogList>().Url())?t=@t">@t</a></span>
+            }
+        </div>
+    }
+}

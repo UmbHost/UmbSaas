@@ -1,0 +1,50 @@
+﻿@using Site.Core.ViewModels;
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<PortfolioItemListViewModel>
+
+@{
+    if (Model == null || Model.Items.Count() == 0) { return; }
+
+    string containerTypeClass = (Model.Masonry) ? "masonry" : "grid";
+    string spacingClass = (Model.Spacing) ? "spacing" : "";
+    string itemClass = (Model.Spacing) ? "container-" + containerTypeClass + " nf-col-" + Model.NoOfCols : "row container-" + containerTypeClass + " nf-col-" + Model.NoOfCols;
+    string containerClass = (Model.Wide) ? "container-fluid" : "container";
+    int cropwidth = (Model.Wide)
+        ? (Model.Spacing) ? 877 : 952
+        : (Model.Spacing) ? 650 : 600;
+    int counter = 0;
+
+    string imageThumb = null;
+}
+
+@foreach (var item in Model.Items)
+{
+    if (item.Image == null)
+    {
+        imageThumb = "/img/noimage/gallery_noimage.png";
+    }
+    else
+    {
+        imageThumb = (Model.Masonry) ? item.Image.GetCropUrl(width: 800, imageCropMode: global::Umbraco.Web.Models.ImageCropMode.Max) : item.Image.GetCropUrl(cropwidth, 350);
+    }
+
+    counter++;
+
+    <div class="nf-item @item.CategoryIds.Replace(","," ") @spacingClass">
+        <div class="item-box">
+            <a href="@item.Url" title="@item.Title">
+                <img class="item-container" src="@imageThumb" alt="@counter" />
+                <div class="item-mask">
+                    <div class="item-caption">
+                        <h5 class="white">@item.Title</h5>
+
+                        @if (!string.IsNullOrEmpty(item.Subtitle))
+                        {
+                            <p class="white">@item.Subtitle</p>
+                        }
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+}

@@ -1,0 +1,18 @@
+﻿{
+  "dashboards": [
+    {
+      "alias": "uMazelDashboard",
+      "view": "/App_Plugins/uMazelDashboard/dashboard.html",
+      "sections": [ "content" ],
+      "weight": -10
+    }
+  ],
+  "javascript": [
+    "~/App_Plugins/uMazelDashboard/controllers/dashboard.controller.js",
+    "~/App_Plugins/uMazelDashboard/services/dashboard.service.js",
+    "~/App_Plugins/uMazelDashboard/filters/dashboard.filter.js"
+  ],
+  "css": [
+    "~/App_Plugins/uMazelDashboard/css/style.css"
+  ]
+}

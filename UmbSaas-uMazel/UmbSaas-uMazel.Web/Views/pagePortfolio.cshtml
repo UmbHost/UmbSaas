@@ -1,0 +1,67 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<PagePortfolio>
+
+@using DotSee.Common;
+@using Site.Core;
+@using ClientDependency.Core.Mvc
+
+@{
+    Layout = "siteTemplate.cshtml";
+    PagePortfolio currPage = Model;
+
+    Html.RequiresJs("/scripts/plugin/isotope.pkgd.min.js", CdfPriority.Medium, CdfGroup.PartiallyUsed);
+    Html.RequiresJs("/scripts/plugin/masonry.pkgd.min.js", CdfPriority.Medium, CdfGroup.PartiallyUsed);
+    Html.RequiresJs("/scripts/plugin/imagesloaded.pkgd.min.js", CdfPriority.Medium, CdfGroup.PartiallyUsed);
+    Html.RequiresCss("/Css/plugin/jquery.fs.tipper.css", CdfPriority.Medium, CdfGroup.Section);
+    Html.RequiresJs("/scripts/plugin/owl.carousel.min.js", CdfPriority.Medium, CdfGroup.Section);
+    Html.RequiresJs("/scripts/plugin/jquery.fs.tipper.min.js", CdfPriority.Medium, CdfGroup.Section);
+    Html.RequiresJs("/scripts/plugin/jquery.stellar.min.js", CdfPriority.Medium, CdfGroup.Section);
+
+    string containerTypeClass = (currPage.Masonry) ? "masonry" : "grid";
+    string containerClass = (currPage.Wide) ? "container-fluid" : "container";
+
+    int cropwidth = (currPage.Wide)
+        ? (currPage.Spacing) ? 877 : 952
+        : (currPage.Spacing) ? 650 : 600;
+
+    string itemClass = (currPage.Spacing) ?
+        "container-" + containerTypeClass + " nf-col-" + currPage.Columns :
+        "row container-" + containerTypeClass + " nf-col-" + currPage.Columns;
+
+    //Pass a value to push down content a bit if no background image is set.
+    bool pushDown = (!(new PageHeaderUtils(currPage).HasHeaderImage));
+
+    string cssClass = Utils.ConcatCssClasses(
+        new string[] {
+            SiteUtils.GetDefaultMtb(),
+            SiteUtils.GetDefaultPtb(),
+            "text-center"
+                        }
+    );
+
+    bool categoriesNotVisible = currPage.DoNotDisplayCategories;
+    string culture = System.Threading.Thread.CurrentThread.CurrentUICulture.Name;
+}
+
+@if (pushDown)
+{
+    <div class="spacer-75"></div>
+}
+
+@Html.Action(MVC.PageBackgroundImage.ActionNames.Index, MVC.PageBackgroundImage.Name, new { culture = culture })
+
+<main id="main">
+    <section id="section_@currPage.Id.ToString()" class="@cssClass">
+        <div class="@containerClass">
+
+            @if (!categoriesNotVisible)
+            {
+                @Html.Action(MVC.Portfolio.ActionNames.GetPortfolioCategories, MVC.Portfolio.Name, new { portfolioId = currPage.Id, culture = culture})
+            }
+
+            <div class="@itemClass">
+
+                @Html.Action(MVC.Portfolio.ActionNames.GetPortfolioListItems, MVC.Portfolio.Name, new { portfolioId = currPage.Id, culture = culture })
+            </div>
+        </div>
+    </section>
+</main>

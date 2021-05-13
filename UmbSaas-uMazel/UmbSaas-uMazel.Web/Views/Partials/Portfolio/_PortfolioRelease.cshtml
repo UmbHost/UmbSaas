@@ -1,0 +1,16 @@
+﻿@using DotSee.Common;
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<PagePortfolioItem>
+
+@{
+    var portfolioRoot = Model.AncestorOrSelf<PagePortfolio>();
+    string dateFormat = portfolioRoot.DateFormat;
+
+    if (Model.ReleaseDate == DateTime.MinValue || portfolioRoot.DoNotDisplayReleaseDate || Model.DoNotDisplayReleaseDate)
+    {
+        return;
+    }
+}
+<p>
+    <strong class="dark-color">@Umbraco.GetDictionaryValue("Portfolio.Released") :</strong>@Model.RenderDateLiteral(Model.ReleaseDate, dateFormat)
+</p>

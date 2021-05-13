@@ -1,0 +1,49 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<Umbraco.Core.Models.Blocks.BlockListItem>
+
+@using Site.Core;
+@using DotSee.Common;
+
+@{
+    SectionPercentagesBlock currSection = Model.Content as SectionPercentagesBlock;
+    SectionPercentagesBlockSettings settings = Model.Settings as SectionPercentagesBlockSettings;
+
+    bool isPartOfMultiCol = (ViewData["isMultiCol"] ?? "0").ToString() == "1";
+    string cssClass = (isPartOfMultiCol) ? "col-md-12" : "col-md-8 col-md-offset-2";
+
+    string cssSectionClass = Utils.ConcatCssClasses(new string[] {
+          settings.GetSectionEffectCssClass()
+        , settings.GetSectionPtb()
+        , settings.GetSectionMtb()
+             });
+}
+
+@if (!isPartOfMultiCol)
+{
+    <section id="section_@currSection.Key.ToString()" class="@cssSectionClass">
+        <div class="container">
+            @content(currSection, cssClass)
+        </div>
+    </section>
+}
+else
+{
+    @content(currSection, cssClass)
+}
+
+
+@helper content(SectionPercentagesBlock currSection, string cssClass)
+{
+    <div class="row">
+        @Html.Partial(MVC.Shared.Views.Molecules._SectionBlockTitle, Model)
+        <div class="@cssClass">
+            @foreach (BlockPercentageItem item in currSection.Items.Select(x => x.Content))
+            {
+                <div class="skillbar" data-percent="@item.Percentage%">
+                    <div class="skillbar-title">@item.Title</div>
+                    <div class="skill-bar-percent">@item.Percentage%</div>
+                    <div class="skillbar-bar"></div>
+                </div>
+            }
+        </div>
+    </div>
+}

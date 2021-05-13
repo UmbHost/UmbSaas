@@ -1,0 +1,15 @@
+﻿@using DotSee.Common.ViewModels
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<SitemapViewModel>
+
+@{
+    if (Model.Items == null || Model.Items.Count() == 0) { return; }
+    foreach (var item in Model.Items)
+    {
+        <url>
+            <loc>@item.Loc</loc>
+            <lastmod>@item.LastMod</lastmod>
+            <priority>@item.Priority</priority>
+        </url>
+    }
+}

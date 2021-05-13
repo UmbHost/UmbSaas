@@ -1,0 +1,29 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage<PageBlogAuthor>
+@{
+    Layout = "InnerPage.cshtml";
+    PageBlogAuthor currPage = Model.Content;
+}
+
+<!-- Main Content start-->
+<div class="content">
+    <div class="container">
+        <div class="row">
+            <div class="posts-block col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <article>
+                    <h3 class="title">@currPage.Name</h3>
+                    <div class="post-content">
+                        @if (currPage.AuthorImage != null)
+                        {
+                            <div class="img-content">
+                                <img src="@(currPage.AuthorImage.Src + currPage.AuthorImage.GetCropUrl("avatar"))" alt="@currPage.Name" />
+                            </div>
+                        }
+                        @Html.Raw(currPage.Content)
+                    </div>
+                </article>
+            </div>
+            <!-- Left Section End -->
+        </div>
+    </div>
+</div>
+<!-- Main Content end-->

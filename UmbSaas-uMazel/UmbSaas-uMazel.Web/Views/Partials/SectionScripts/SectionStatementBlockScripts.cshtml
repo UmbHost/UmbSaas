@@ -1,0 +1,26 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<Umbraco.Core.Models.Blocks.BlockListItem>
+
+@using ClientDependency.Core.Mvc
+
+@{
+    SectionStatementBlock currSection = Model.Content as SectionStatementBlock;
+    Html.RequiresJs("/scripts/plugin/jquery.stellar.min.js");
+    Html.RequiresJs("/scripts/plugin/jquery.fs.tipper.min.js");
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".cbox-iframe").colorbox({
+            iframe: false,
+            html: function () {
+                var iframe = '<iframe id="@(currSection.Key)_vid" width="95%" height="95%" src="' + $(this).attr("href") + '" frameborder="0" allow="autoplay; fullScreen"></iframe>';
+                var output = "<div style='line-height: 0px; overflow: hidden;'>" + iframe + '</div>';
+                return (iframe);
+            },
+            maxWidth: "95%",
+            maxHeight: "95%",
+            innerWidth: "95%",
+            innerHeight: "95%"
+        });
+    });
+</script>

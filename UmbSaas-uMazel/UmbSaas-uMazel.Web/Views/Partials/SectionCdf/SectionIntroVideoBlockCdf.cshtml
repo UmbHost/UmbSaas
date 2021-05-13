@@ -1,0 +1,12 @@
+﻿@using ClientDependency.Core.Mvc
+@using DotSee.Common
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<Umbraco.Core.Models.Blocks.BlockListItem>
+
+@{
+    Html.RequiresCss("/Css/plugin/YTPlayer.css", CdfPriority.Medium, CdfGroup.Section);
+    Html.RequiresJs("/scripts/plugin/jquery.mb.YTPlayer.min.js", CdfPriority.Medium, CdfGroup.Section);
+    Html.RequiresCss("/Css/plugin/jquery.fs.tipper.css", CdfPriority.Medium, CdfGroup.Section);
+    Html.RequiresJs("/scripts/plugin/jquery.fs.tipper.min.js", CdfPriority.Medium, CdfGroup.Section);
+    Html.RequiresJs("/scripts/plugin/jquery.stellar.min.js", CdfPriority.Medium, CdfGroup.Section);
+}

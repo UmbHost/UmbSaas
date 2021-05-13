@@ -1,0 +1,16 @@
+﻿@using Site.Core;
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage
+
+@{
+    ConfigMenuAndFooterSettings footerSettings = CachedNodes.GetMenuAndFooterSettingsNode();
+}
+
+<section class="copyright ptb-15">
+    <div class="container">
+        <p class="copyright">
+            @footerSettings.CopyrightText
+        </p>
+    </div>
+</section>
+

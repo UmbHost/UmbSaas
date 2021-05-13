@@ -1,0 +1,132 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<PageCookiePreferences>
+
+@using ClientDependency.Core.Mvc;
+@using DotSee.Common;
+@using Site.Core;
+
+@{
+    Layout = "siteTemplate.cshtml";
+    PageCookiePreferences currPage = Model;
+
+    Html.RequiresCss("/Css/plugin/jquery.fs.tipper.css", CdfPriority.Medium, CdfGroup.Section);
+    Html.RequiresJs("/scripts/plugin/jquery.fs.tipper.min.js", CdfPriority.Medium, CdfGroup.Section);
+
+    string cssSectionClass = Utils.ConcatCssClasses(
+        new string[] {
+            SiteUtils.GetDefaultMtb(),
+            SiteUtils.GetDefaultPtb()
+                }
+    );
+
+    string cssClass = (currPage.WideText) ? "col-md-10 col-md-offset-1" : "col-md-8 col-md-offset-2";
+    var btnColorBg =
+        currPage.ResetCookieButtonColor.IsNullOrWhiteSpace() ? "323232" : currPage.ResetCookieButtonColor;
+    var btnColorTxt =
+        currPage.ResetCookieButtonTextColor.IsNullOrWhiteSpace() ? "f7f7f7" : currPage.ResetCookieButtonTextColor;
+
+    //Pass a value to push down content a bit if no background image is set.
+    bool pushDown = (!(new PageHeaderUtils(currPage).HasHeaderImage)) && !currPage.IntroSection.Any();
+
+    string culture = System.Threading.Thread.CurrentThread.CurrentUICulture.Name;
+}
+
+@if (pushDown)
+{
+    <div class="spacer-75"></div>
+}
+
+@Html.Action(MVC.PageBackgroundImage.ActionNames.Index, MVC.PageBackgroundImage.Name, new { culture = culture })
+
+<main id="main">
+    <section id="section_@currPage.Id.ToString()" class="@cssSectionClass">
+        <div class="container">
+            <div class="row">
+                <div class="@cssClass">
+
+                    @{
+                        var counter = 1;
+                        if (currPage.CookieGroups != null &&
+                            currPage.CookieGroups.Any())
+                        {
+                            foreach (NcCookieGroup item in currPage.CookieGroups)
+                            {
+                                <div class="mt-30 mb-30">
+                                    <h3 class="text-center">@item.Title</h3>
+
+                                    @item.Description
+
+                                    @switch (item.Group)
+                                    {
+                                        case "Essential":
+
+                                            <div class="form-check inline-checkbox">
+                                                <input class="form-check-input" type="checkbox" checked disabled />
+                                                <label class="form-check-label">
+                                                    Accept
+                                                </label>
+                                            </div>
+
+                                            break;
+                                        case "Statistics":
+
+                                            <div class="form-check inline-checkbox">
+                                                <input id="acceptStatistics" class="form-check-input radio" type="checkbox" value="1" name="fooby[@counter][]" />
+                                                <label class="form-check-label">
+                                                    Accept
+                                                </label>
+                                            </div>
+                                            <div class="form-check inline-checkbox">
+                                                <input id="rejectStatistics" class="form-check-input radio" type="checkbox" value="1" name="fooby[@counter][]" />
+                                                <label class="form-check-label">
+                                                    Reject
+                                                </label>
+                                            </div>
+
+                                            break;
+                                        case "Marketing":
+
+                                            <div class="form-check inline-checkbox">
+                                                <input id="acceptMarketing" class="form-check-input radio" type="checkbox" value="1" name="fooby[@counter][]" />
+                                                <label class="form-check-label">
+                                                    Accept
+                                                </label>
+                                            </div>
+                                            <div class="form-check inline-checkbox">
+                                                <input id="rejectMarketing" class="form-check-input radio" type="checkbox" value="1" name="fooby[@counter][]" />
+                                                <label class="form-check-label">
+                                                    Reject
+                                                </label>
+                                            </div>
+
+                                            break;
+                                    }
+
+                                </div>
+
+                                counter++;
+
+                            }
+                        }
+                    }
+
+                </div>
+
+                @{
+                    if (currPage.ShowResetCookiesButton)
+                    {
+                        var resetBtnText = currPage.ResetCookiesButtonText.IsNullOrWhiteSpace() ? string.Empty : currPage.ResetCookiesButtonText;
+                        <div class="@cssClass mtb-30">
+                            <button class="btn btn-md btn-black" style="background-color: #@btnColorBg !important; color: #@btnColorTxt !important;" id="magicButton">
+                                @resetBtnText
+                            </button>
+                        </div>
+                    }
+                }
+
+            </div>
+        </div>
+    </section>
+
+    @Html.Partial(MVC.Shared.Views.Common._PageBlockRenderer, currPage)
+
+</main>

@@ -1,0 +1,49 @@
+﻿@using Site.Core.ViewModels;
+@using DotSee.ResponsiveImages;
+@using DotSee.Common;
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<PageProductsListViewModel>
+@{ 
+    string cssLayout = null;
+    switch (Model.ProductListRoot.LayoutMode)
+    {
+        case 2:
+            cssLayout = "col-md-6";
+            break;
+        case 3:
+            cssLayout = "col-md-4";
+            break;
+        case 4:
+            cssLayout = "col-md-3";
+            break;
+    }
+    string culture = System.Threading.Thread.CurrentThread.CurrentUICulture.Name;
+}
+@foreach (PageProduct item in Model.Items)
+{
+    SrcSetManager ssm = new SrcSetManager(item.ProductImages.First(), "productImagesList");
+
+    <div class="nf-item @cssLayout col-sm-6 col-xs-12 mb-30">
+        <div class="item-box">
+            <!-- Shop item images -->
+            <div class="shop-item">
+                <div class="item-img">
+                    <a href="@item.Url()">
+                        @ssm.CreatePictureElement(imageAlt: item.GetPageTitleForMenu())
+                    </a>
+                </div>
+            </div>
+            <!-- End Shop item images -->
+            <!-- Shop item info -->
+            <div class="shop-item-info">
+                <a href="@item.Url()">
+                    <h6 class="shop-item-name">@item.Name</h6>
+                </a>
+
+                @Html.Action(MVC.ProductPrice.ActionNames.Index, MVC.ProductPrice.Name, new { product = item, productList = Model.ProductListRoot, culture = culture })
+
+            </div>
+            <!-- Shop item info -->
+        </div>
+    </div>
+}

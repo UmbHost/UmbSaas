@@ -1,0 +1,67 @@
+﻿.cookie-dialog {
+    width: 100%;
+    padding: 20px 30px 30px 20px;
+    position: fixed;
+    bottom: 0;
+    z-index: 99999999999999999999999999;
+    box-shadow: 0px 2px 10px #000;
+}
+
+.cookie-dialog .dialog-content {
+    display: flex;
+    flex-direction: column;
+}
+.cookie-dialog .btn {
+    white-space: normal;
+}
+.cookie-dialog .dialog-description,
+.cookie-dialog .learn-more,
+.cookie-dialog .btn {
+    font-size: 13px;
+}
+
+.cookie-dialog .cookiedialog-button-wrap {
+    display: flex;
+}
+@media (max-width: 480px) {
+    .cookie-dialog .dialog-content {
+        text-align:center;
+    }
+    .cookie-dialog .cookiedialog-button-wrap {
+        flex-direction: column;
+        align-items: center;
+    }
+        .cookie-dialog .cookiedialog-button-wrap .btn:not(:first-child) {
+            margin-top: 12px;
+        }
+}
+@media (min-width: 481px) {
+    .cookie-dialog .cookiedialog-button-wrap .btn:not(:first-child) {
+        margin-left: 12px;
+    }
+}
+
+
+.cookie-dialog .cookiedialog-button-wrap {
+    width: 100%;
+}
+
+@media (max-width: 767px) {
+    .cookie-dialog {
+        padding: 20px 10px;
+    }
+    .cookie-dialog .btn {
+        padding: 0.6em 0.9em;
+        width: 48%;
+    }
+}
+
+@media (max-width: 1439px) {
+    .responsive-table-input-matrix th,
+    .responsive-table-input-matrix td {
+        width: unset !important;
+    }
+    .responsive-table-input-matrix {
+        width: unset !important;
+    }
+} 

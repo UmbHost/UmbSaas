@@ -1,0 +1,51 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<Umbraco.Core.Models.Blocks.BlockListItem>
+
+@using Site.Core;
+@using DotSee.Common;
+
+@{
+    SectionTextBlock currSection = Model.Content as SectionTextBlock;
+    SectionTextBlockSettings settings = Model.Settings as SectionTextBlockSettings;
+
+    bool isPartOfMultiCol = (ViewData["isMultiCol"] ?? "0").ToString() == "1";
+    string cssClass = (isPartOfMultiCol) ? "col-md-12" : (currSection.WideText) ? "col-md-10 col-md-offset-1" : "col-md-8 col-md-offset-2";
+
+    string cssSectionClass = Utils.ConcatCssClasses(new string[] {
+          settings.GetSectionEffectCssClass()
+        , settings.GetSectionPtb()
+        , settings.GetSectionMtb()
+             });
+}
+
+@if (!isPartOfMultiCol)
+{
+    <section id="section_@currSection.Key.ToString()" class="@cssSectionClass">
+        <div class="container">
+            @content(currSection, settings, cssClass)
+        </div>
+    </section>
+}
+else
+{
+    @content(currSection, settings, cssClass)
+}
+
+
+@helper content(SectionTextBlock currSection, SectionTextBlockSettings settings, string cssClass)
+{
+    string textCssClass = (currSection.LargerText) ? "lead" : null;
+
+    <div class="row">
+        <div class="@cssClass @(currSection.CenterTextAndTitle ? "text-center" : "")">
+            @if (!settings.HideTitle)
+            {
+                @Html.Partial(MVC.Shared.Views.Molecules._SectionBlockTitle, Model)
+            }
+
+            <div class="@textCssClass">
+                @Html.Raw(currSection.TextContent.ToString())
+            </div>
+        </div>
+    </div>
+}
+

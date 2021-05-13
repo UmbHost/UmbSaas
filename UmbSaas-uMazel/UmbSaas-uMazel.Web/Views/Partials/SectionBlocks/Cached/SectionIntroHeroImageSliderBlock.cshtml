@@ -1,0 +1,88 @@
+﻿@using Site.Core;
+@using DotSee.Common;
+@using DotSee.ResponsiveImages;
+@using DotSee.Common.Link;
+@using System.Collections.Specialized;
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<Umbraco.Core.Models.Blocks.BlockListItem>
+
+@{
+    SectionIntroHeroImageSliderBlock currSection = Model.Content as SectionIntroHeroImageSliderBlock;
+    SectionIntroHeroImageSliderBlockSettings settings = Model.Settings as SectionIntroHeroImageSliderBlockSettings;
+
+    string nextBlockKey = SiteUtils.GetFirstBlockKey(Umbraco.AssignedContentItem);
+}
+
+<section class="hero">
+    @if (!string.IsNullOrEmpty(nextBlockKey))
+    {
+        <div class="intro-scroll-down">
+            <a class="scroll-down" href="#section_@nextBlockKey">
+                <span class="mouse">
+                    <span class="mouse-dot"></span>
+                </span>
+            </a>
+        </div>
+    }
+    <div class="flexslider fullscreen-carousel hero-slider-1 parallax parallax-section1">
+        <ul class="slides">
+            @{
+                foreach (BlockSliderImage item in currSection.Images.Select(x => x.Content))
+                {
+                    SrcSetManager ssm = new SrcSetManager(item.Image, "backgroundfull");
+
+                    string textClasses = Utils.ConcatCssClasses(new string[] {
+                        "container caption-hero"
+                        , (item.UseLightTextColor) ? "light-color" : "dark-color"
+                    });
+
+                    string overlayClasses = Utils.ConcatCssClasses(new string[] {
+                        "overlay-hero"
+                        ,SiteUtils.GetOverlayCssClass((int)item.Overlay)
+
+                    });
+
+                    string buttonClasses = Utils.ConcatCssClasses(new string[] {
+                        "btn"
+                        , SiteUtils.GetButtonSize(item)
+                        , SiteUtils.GetButtonFill(item) ?? "btn-white"
+                    });
+
+                    bool hasLink = (item.LinkButtons != null && item.LinkButtons.Count() != 0);
+
+                    <li>
+                        @ssm.CreatePictureElement(imageAlt: item.Title, imageAttributes: new Dictionary<string, string> { { "draggable", "false" } })
+                        <div class="@overlayClasses">
+                            <div class="@textClasses">
+                                <div class="inner-caption">
+                                    @if (item.LargerTitle)
+                                    {
+                                        <h2 class="h2 large">@item.Title</h2>
+                                    }
+                                    else
+                                    {
+                                        <h2 class="h2">@item.Title</h2>
+                                    }
+
+                                    <p class="lead">@item.Subtitle</p>
+                                    <div class="row">
+                                        <p class="lead col-md-8 col-md-offset-2">@Html.Raw(item.Summary.Replace(Environment.NewLine, "<br/>"))</p>
+                                    </div>
+                                    @if (hasLink)
+                                    {
+                                        LinkItem link = item.LinkButtons.First().Content.GetLink();
+                                        <div>
+                                            @Link.GetLinkMarkup(item: item.LinkButtons.First().Content,
+                                                attributes: new ListDictionary() { { "class", buttonClasses } })
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                }
+            }
+        </ul>
+    </div>
+</section>
+<div class="clearfix"></div>

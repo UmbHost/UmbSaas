@@ -1,0 +1,183 @@
+﻿@using DotSee.Common;
+@using Umbraco.Web.PublishedModels;
+@using ClientDependency.Core.Mvc;
+@using DotSee.ResponsiveImages;
+@using Umbraco.Web.Models;
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<PageProduct>
+
+@{
+    Html.RequiresCss("~/Css/plugin/owl.carousel.css", CdfPriority.First, CdfGroup.Section);
+    Html.RequiresCss("~/Css/plugin/swiper.min.css", CdfPriority.First, CdfGroup.Section);
+    Html.RequiresCss("~/Css/plugin/jquery.fancybox.css", CdfPriority.First, CdfGroup.Section);
+    Html.RequiresJs("~/Scripts/plugin/owl.carousel.min.js", CdfPriority.First, CdfGroup.Section);
+    Html.RequiresJs("~/Scripts/plugin/swiper.min.js", CdfPriority.First, CdfGroup.Section);
+    Html.RequiresJs("~/Scripts/plugin/jquery.fancybox.min.js", CdfPriority.First, CdfGroup.Section);
+    Html.RequiresJs("/scripts/plugin/jquery.fs.tipper.min.js", CdfPriority.First, CdfGroup.Section);
+
+    Layout = "siteTemplate.cshtml";
+    PageProduct currPage = Model;
+
+    var productListPage = currPage.AncestorOrSelf(1).Descendant<PageProductsList>();
+
+    var counter = 0;
+
+    string culture = System.Threading.Thread.CurrentThread.CurrentUICulture.Name;
+
+    bool showBackBtn = productListPage.ShowBackToListButton;
+    string backBtnText = productListPage.BackToListButtonCaption.IsNullOrWhiteSpace() ?
+        Umbraco.GetDictionaryValue("Misc.BackToList") :
+        productListPage.BackToListButtonCaption;
+}
+
+@Html.Action(MVC.PageBackgroundImage.ActionNames.Index, MVC.PageBackgroundImage.Name, new { culture = culture })
+
+<section id="shop-item" class="ptb ptb-sm-80">
+    <div class="container">
+        <div class="row ">
+
+            <div class="col-md-6 mb-sm-60">
+
+                <div class="shop-detail-item">
+
+                    <div class="swiper-container gallery-top">
+                        <div class="swiper-wrapper">
+                            @foreach (var item in currPage.ProductImages)
+                            {
+                                SrcSetManager ssm = new SrcSetManager(item, "productImages");
+                                SrcSetManager ssmZoom = new SrcSetManager(item, "productImagesZoom");
+
+                                string imgUrlZoom = item.GetCropUrl(width: 1680);
+
+                                <a href="@imgUrlZoom"
+                                   data-fancybox="gallery"
+                                   data-srcset="@ssmZoom.GetSrcSet()"
+                                   class="swiper-slide">
+                                    @ssm.CreatePictureElement(imageAlt: currPage.GetPageTitleForMenu())
+                                </a>
+
+                                counter++;
+                            }
+                        </div>
+                    </div>
+
+                    <div class="swiper-container gallery-thumbs @(counter > 1 ? "":"hidden")">
+                        <div class="swiper-wrapper">
+                            @foreach (var item in currPage.ProductImages)
+                            {
+                                string imgUrl = item.GetCropUrl(width: 70, height: 50, imageCropMode: ImageCropMode.Pad);
+                                <div class="swiper-slide">
+                                    <img src="@imgUrl" />
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="shop-detail-info">
+                    <h4>@currPage.GetPageTitleForMenu()</h4>
+
+                    @Html.Action(MVC.ProductPrice.ActionNames.Index, MVC.ProductPrice.Name, new { product = currPage, productList = productListPage, culture = culture })
+
+                    <p class="ptb-15">@currPage.SmallDescription</p>
+                    <ul class="project-detail-block ptb-15">
+                        @foreach (var item in currPage.ProductProperties)
+                        {
+                            <li>
+                                <p>
+                                    <strong class="dark-color">@item.Field :</strong><span>@item.Value</span>
+                                </p>
+                            </li>
+                        }
+                    </ul>
+
+                    <!-- Tab -->
+                    <div class="tabs mt-15">
+
+                        <ul>
+                            <li><a href="#tabs-1">@Umbraco.GetDictionaryValue("Products.TabTitle1")</a></li>
+                            <li><a href="#tabs-2">@Umbraco.GetDictionaryValue("Products.TabTitle2")</a></li>
+                            <li><a href="#tabs-3">@Umbraco.GetDictionaryValue("Products.TabTitle3")</a></li>
+                        </ul>
+
+                        <div class="ui-tab-content">
+
+                            <div id="tabs-1">
+                                @currPage.Description
+                            </div>
+
+                            <div id="tabs-2">
+                                <table class="table table-striped">
+                                    @foreach (var item in currPage.ProductDataSheet)
+                                    {
+                                        <tr>
+                                            <td>@item.Field</td>
+                                            <td>@item.Value</td>
+                                        </tr>
+                                    }
+                                </table>
+                            </div>
+
+                            <div id="tabs-3">
+                                @foreach (var item in currPage.ProductAdditionalInfo)
+                                {
+                                    string fileUrl = item.File.Url;
+                                    <i class="fa fa-download"></i> <a href="@fileUrl"> @item.Title</a>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    @if (showBackBtn)
+                    {
+                        <div class="mt-45">
+                            <a href="@currPage.Parent.Url()" class="btn btn-md btn-outline-dark">
+                                < @backBtnText
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@if (currPage.RelatedProducts != null)
+{
+    <section class="ptb ptb-sm-80">
+        <div class="container">
+            <h4>Related Product</h4>
+            <div class="spacer-30"></div>
+            <div class="row">
+                <div class="owl-carousel item4-carousel nf-carousel-theme o-flow-hidden">
+                    @foreach (PageProduct item in currPage.RelatedProducts)
+                    {
+                        string imgUrl = item.ProductImages.First().GetCropUrl(width: 700, height: 460);
+
+                        <div class="item">
+                            <div class="nf-col-padding">
+                                <div class="item-box">
+
+                                    <div class="shop-item">
+                                        <div class="item-img">
+                                            <img src="@imgUrl" />
+                                        </div>
+                                    </div>
+
+                                    <div class="shop-item-info">
+                                        <a href="@item.Url">
+                                            <h6 class="shop-item-name">@item.Name</h6>
+                                        </a>
+                                        <div class="shop-item-price"><span>@item.Price</span></div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </section>
+}

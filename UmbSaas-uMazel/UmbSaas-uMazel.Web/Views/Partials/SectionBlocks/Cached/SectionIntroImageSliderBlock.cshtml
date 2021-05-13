@@ -1,0 +1,75 @@
+﻿@using DotSee.ResponsiveImages
+@using DotSee.Common.Link;
+@using DotSee.Common
+@using Site.Core
+@using System.Collections.Specialized;
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<Umbraco.Core.Models.Blocks.BlockListItem>
+
+@{
+    SectionIntroImageSliderBlock currSection = Model.Content as SectionIntroImageSliderBlock;
+    SectionIntroImageSliderBlockSettings settings = Model.Settings as SectionIntroImageSliderBlockSettings;
+}
+
+<section class="home-slider hero">
+    @foreach (BlockSliderImage item in currSection.Images.Select(x => x.Content))
+    {
+        SrcSetManager ssm = new SrcSetManager(item.Image, "backgroundfull");
+        @ssm.GetBreakPointsCss()
+    }
+    <div class="owl-carousel fullwidth-slider white o-flow-hidden">
+
+        @{
+            foreach (BlockSliderImage item in currSection.Images.Select(x => x.Content))
+            {
+                SrcSetManager ssm = new SrcSetManager(item.Image, "backgroundfull");
+
+                string imageClasses = Utils.ConcatCssClasses(new string[] {
+                    SiteUtils.GetOverlayCssClass((int)item.Overlay)
+                    , (item.UseLightTextColor) ? "light-color" : "dark-color"
+                });
+
+                string buttonClasses = Utils.ConcatCssClasses(new string[] {
+                    "btn"
+                    , SiteUtils.GetButtonSize(item)
+                    , SiteUtils.GetButtonFill(item) ?? "btn-white"
+                });
+
+                bool hasLink = (item.LinkButtons != null && item.LinkButtons.Count() != 0);
+
+                <div class="item bg-img parallax parallax-section1 @ssm.GetClassName()">
+
+                    <div class="full-cap-wraper @imageClasses">
+                        <div class="content-caption @imageClasses">
+                            <div class="container">
+                                @if (item.LargerTitle)
+                                {
+                                    <h1 class="large">@item.Title</h1>
+                                }
+                                else
+                                {
+                                    <h1>@item.Title</h1>
+                                }
+                                <br />
+                                <h5>@item.Subtitle</h5>
+                                <div class="row">
+                                    <p class="lead col-md-8 col-md-offset-2">@Html.Raw(item.Summary.Replace("\n", "<br />"))</p>
+                                </div>
+                                <br>
+                                @if (hasLink)
+                                {
+                                    LinkItem link = item.LinkButtons.First().Content.GetLink();
+                                    <div>
+                                        @Link.GetLinkMarkup(item: item.LinkButtons.First().Content,
+                                            attributes: new ListDictionary() { { "class", buttonClasses } })
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</section>
+<div class="clearfix"></div>

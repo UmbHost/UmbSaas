@@ -1,0 +1,57 @@
+﻿@using DotSee.ResponsiveImages
+@using DotSee.Common
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<Umbraco.Core.Models.Blocks.BlockListItem>
+
+@using Site.Core
+
+@{
+    SectionCounterBlock currSection = Model.Content as SectionCounterBlock;
+    SectionCounterBlockSettings settings = Model.Settings as SectionCounterBlockSettings;
+
+    string cols = (12 / currSection.Items.Count()).ToString();
+
+    //Will be reused stand-alone in markup.
+    //We don't use the SiteUtils method here on purpose.
+    string colorCss = (settings.UseLightTextColor) ? "light-color" : "dark-color";
+
+    //Since colorCss will always have a value, setting this to null is a bit redundant, but
+    //better safe than sorry :)
+    string sectionClasses = null;
+
+    SrcSetManager ssm = settings.Image != null ? new SrcSetManager(settings.Image, "backgroundfull") : null;
+
+    if (ssm != null)
+    {
+        @ssm.GetBreakPointsCss()
+    }
+
+    sectionClasses = Utils.ConcatCssClasses(new string[] {
+              settings.GetSectionEffectCssClass()
+            , SiteUtils.GetOverlayCssClass((int)settings.Overlay)
+            , colorCss
+            , ssm != null ? ssm.GetClassName() : ""
+            , settings.GetSectionPtb()
+            , settings.GetSectionMtb()
+        });
+
+    string itemClasses = Utils.ConcatCssClasses(new string[]
+{
+        "container"
+        ,"text-" + (string.IsNullOrEmpty(settings.TextOrientation) ? "center" : settings.TextOrientation.ToLower())
+                });
+}
+
+<section id="section_@currSection.Key.ToString()" class="@sectionClasses">
+    <div class="@itemClasses">
+        <div class="row">
+            @foreach (BlockCounterItem item in currSection.Items.Select(x => x.Content))
+            {
+                <div class="col-md-@cols mb-sm-30 @colorCss">
+                    <h1 class="counter" data-count="@item.Counter">0</h1>
+                    <h6>@item.CounterText</h6>
+                </div>
+            }
+        </div>
+    </div>
+</section>

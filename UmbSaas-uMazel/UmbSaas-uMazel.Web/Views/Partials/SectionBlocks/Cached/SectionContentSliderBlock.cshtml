@@ -1,0 +1,86 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<Umbraco.Core.Models.Blocks.BlockListItem>
+
+@using Site.Core;
+@using DotSee.Common.Link;
+@using DotSee.ResponsiveImages;
+@using DotSee.Common;
+
+@{
+    SectionContentSliderBlock currSection = Model.Content as SectionContentSliderBlock;
+    SectionContentSliderBlockSettings settings = Model.Settings as SectionContentSliderBlockSettings;
+
+    string cssClass = Utils.ConcatCssClasses(
+new string[] {
+              settings.GetSectionEffectCssClass()
+            , settings.GetSectionPtb()
+            , settings.GetSectionMtb()
+            });
+}
+
+<section id="section_@currSection.Key.ToString()" class="@cssClass">
+    <div class="owl-carousel content-carousel content-slider">
+
+        @foreach (BlockContentSliderItem item in currSection.Items.Select(x => x.Content))
+        {
+            var content = item.Content;
+
+            SrcSetManager ssm = new SrcSetManager(item.Image, "contentSlider");
+
+            string position = item.ImagePosition;
+
+            bool hasLink = (item.Link != null && item.Link.Count() != 0);
+
+            LinkItem link = null;
+
+            <div class="item">
+                <div class="container">
+                    <div class="row">
+                        @switch (position)
+                        {
+                            case "Left":
+
+                                <div class="col-md-6 mb-sm-30">
+                                    <img srcset="@ssm.GetSrcSet()" src="@item.Image.GetCropUrl(width:768)" alt="@item.Title" />
+                                </div>
+                                <div class="col-md-5 col-md-offset-1">
+                                    <h3>@item.Title</h3>
+                                    <div class="spacer-15"></div>
+                                    @Html.Raw(content)
+                                    <div class="spacer-15"></div>
+                                    @if (hasLink)
+                                    {
+                                        link = item.Link.First().Content.GetLink();
+
+                                        <a href="@link.Url" target="@link.Target" class="btn btn-md btn-black">@link.Caption</a>
+                                    }
+                                </div>
+
+                                break;
+
+                            case "Right":
+
+                                <div class="col-md-5 mb-sm-30">
+                                    <h3>@item.Title</h3>
+                                    <div class="spacer-15"></div>
+                                    @Html.Raw(content)
+                                    <div class="spacer-15"></div>
+                                    @if (hasLink)
+                                    {
+                                        link = item.Link.First().Content.GetLink();
+
+                                        <a href="@link.Url" target="@link.Target" class="btn btn-md btn-black">@link.Caption</a>
+                                    }
+                                </div>
+
+                                <div class="col-md-6 col-md-offset-1">
+                                    <img src="@item.Image.GetCropUrl(width:768)" alt="@item.Title" />
+                                </div>
+
+                                break;
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</section>

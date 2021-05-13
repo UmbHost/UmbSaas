@@ -1,0 +1,18 @@
+﻿@using System.Linq;
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<PageArticleItem>
+@{
+    if (Model.Ancestor<PageBlogList>().HideAuthors || Model.Author == null) { return; }
+
+    foreach (PageBlogAuthor a in Model.Author)
+    {
+        if (a.AuthorBioPage!=null && a.AuthorBioPage.Url!="")
+        {
+            <span><a href="@(a.AuthorBioPage.Url)">@a.Name</a>&nbsp;</span>
+        }
+        else
+        {
+            <span><a>@a.Name</a>&nbsp;</span>
+        }
+    }
+}

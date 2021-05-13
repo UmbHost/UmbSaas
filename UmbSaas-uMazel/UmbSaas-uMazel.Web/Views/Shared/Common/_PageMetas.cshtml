@@ -1,0 +1,52 @@
+﻿@using DotSee.PageMetas.ViewModels;
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<PageMetasViewModel>
+
+    <title>@Model.BrowserTitle</title>
+
+    @foreach (string item in Model.MetaTags.AllKeys)
+    {
+        @RenderMetaTag(item, Model.MetaTags[item])
+    }
+
+    @foreach (string item in Model.OgTags.AllKeys)
+    {
+        @RenderOgTag(item, Model.OgTags[item])
+    }
+
+    @foreach (string item in Model.HttpEquivTags.AllKeys)
+    {
+        @RenderHttpEquivMetaTag(item, Model.HttpEquivTags[item])
+    }
+
+    @helper RenderMetaTag(string name, string value)
+    {
+        if (!string.IsNullOrEmpty(value))
+        {
+            <meta name="@name" content="@value" />
+        }
+    }
+
+    @helper RenderHttpEquivMetaTag(string name, string value)
+    {
+        if (!string.IsNullOrEmpty(value))
+        {
+            <meta http-equiv="@name" content="@value" />
+        }
+    }
+
+    @helper RenderOgTag(string name, string value)
+    {
+        if (!string.IsNullOrEmpty(value))
+        {
+            <meta property="@name" content="@value" />
+        }
+    }
+
+    @helper RenderTwitterTag(string name, string value)
+    {
+        if (!string.IsNullOrEmpty(value))
+        {
+            <meta name="@name" content="@value" />
+        }
+    }

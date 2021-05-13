@@ -1,0 +1,51 @@
+﻿@using DotSee.Common;
+@using Site.Core;
+@using Site.Core.ViewModels;
+@using Umbraco.Web.PublishedModels;
+@using DotSee.ResponsiveImages;
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<PageBackgroundImageViewModel>
+
+@{
+
+    string smallIntroCss = Model.LargeHeight ? "" : "inner-intro-small";
+    string srcSetConfig = Model.LargeHeight ? "headerbglarge" : "headerbgnormal";
+
+    string sectionClasses = null;
+   
+        SrcSetManager ssm = new SrcSetManager(Model.Image, srcSetConfig);
+
+        @ssm.GetBreakPointsCss()
+
+        sectionClasses = Utils.ConcatCssClasses(new string[] {
+              smallIntroCss
+            , SiteUtils.GetOverlayCssClass((int)Model.Overlay)
+            , ssm.GetClassName()
+            , "inner-intro parallax parallax-background2"
+        });
+
+<section class="@sectionClasses">
+    <div class="container">
+        <div class="row title @Model.TextCss">
+            <h1 class="h1">@Model.Title</h1>
+
+            @if (!Model.HideBreadcrumb)
+            {
+                <div class="page-breadcrumb mt-15">
+
+                    @Html.Partial(MVC.Shared.Views.Common._PageBreadcrumb, Umbraco.AssignedContentItem, new ViewDataDictionary { { "currPage", ViewData["currPage"] } })
+                    <br />
+                </div>
+            }
+            @if (!string.IsNullOrEmpty(Model.Summary))
+            {
+                <div class="mt-15">
+
+                    @Model.Summary
+                </div>
+            }
+        </div>
+    </div>
+</section>
+<div class="clearfix"></div>
+}

@@ -1,0 +1,9 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<Umbraco.Core.Models.Blocks.BlockListItem>
+@using ClientDependency.Core.Mvc;
+@using DotSee.Common;
+
+@{
+    Html.RequiresCss("/Css/plugin/jquery.fs.tipper.css", CdfPriority.Medium, CdfGroup.Section);
+    Html.RequiresJs("/scripts/plugin/jquery.fs.tipper.min.js", CdfPriority.Medium, CdfGroup.Section);
+    Html.RequiresJs("/scripts/plugin/jquery.stellar.min.js", CdfPriority.Medium, CdfGroup.Section);
+}

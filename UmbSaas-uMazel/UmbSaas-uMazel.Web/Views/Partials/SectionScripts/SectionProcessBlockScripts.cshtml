@@ -1,0 +1,12 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<Umbraco.Core.Models.Blocks.BlockListItem>
+
+@{
+    SectionProcessBlock currSection = Model.Content as SectionProcessBlock;
+    SectionProcessBlockSettings settings = Model.Settings as SectionProcessBlockSettings;
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("section[id='section_@currSection.Key.ToString()'] .tipped").tipper();
+    });
+</script>

@@ -1,0 +1,73 @@
+﻿@using DotSee.Common
+@using Site.Core
+@using Site.Core.Controllers;
+@using Site.Core.ViewModels;
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<MenuViewModel>
+
+@{
+    //It's ugly, I know.
+    //I should at least have used recursion, I know.
+    //Please be gentle. I'm sensitive. :)
+
+    var currPageId = ViewData["pageId"].ToString();
+
+    if (currPageId == CachedNodes.GetHomePage().Id.ToString()) { currPageId = "0"; }
+}
+<nav class="navigation">
+    <ul>
+        @foreach (MenuItem item in Model.Items)
+        {
+            if (item == null) { continue; }
+
+            var currPage = currPageId != "0" ? Umbraco.Content(currPageId) : null;
+           
+
+            bool check = !item.IsHomePage
+                            && item.IsContainedInPath(currPage?.Path)
+            ;
+            MvcHtmlString activeCssClass = (item.ContainsInPath(currPageId) || check) ? Html.Attr("class", "active") : MvcHtmlString.Empty;
+
+            <li @activeCssClass>
+                <a href="@item.Link">@item.Title</a>
+                @if (item.Items != null && item.Items.Any() && Umbraco.Content(item.Id).GetType() != typeof(PageHome))
+                {
+                    <ul class="nav-dropdown">
+                        @foreach (MenuItem subItem in item.Items)
+                        {
+                            //LEVEL 2
+
+                            bool isActive = (subItem.IsContainedInPath(currPage?.Path) || currPageId == subItem.Id.ToString());
+                            string cssClassSecondLevel = string.Concat((subItem.Items.Any()) ? "nav-has-sub" : "", (isActive) ? " active" : "");
+
+                            MvcHtmlString listCssClass = (!string.IsNullOrEmpty(cssClassSecondLevel)) ? Html.Attr("class", cssClassSecondLevel) : MvcHtmlString.Empty;
+
+                            <li @listCssClass>
+                                <a href="@subItem.Link">@subItem.Title</a>
+
+                                @if (subItem.Items.Any())
+                                {
+                                    <ul class="nav-sub-dropdown">
+                                        @foreach (MenuItem subItem2 in subItem.Items)
+                                        {
+                                            MvcHtmlString activeCssClassThirdLevel = (subItem2.IsContainedInPath(currPage?.Path)) ? Html.Attr("class", "active") : MvcHtmlString.Empty;
+                                            
+                                            //LEVEL 3
+                                            <li @activeCssClassThirdLevel>
+                                                <a href="@subItem2.Link">@subItem2.Title</a>
+                                            </li>
+                                        }
+                                    </ul>
+                                }
+                            </li>
+                        }
+                    </ul>
+                }
+            </li>
+        }
+
+        <li class="">
+            <a class="search-overlay-menu-btn header-icon"><i class="fa fa-search"></i></a>
+        </li>
+    </ul>
+</nav>

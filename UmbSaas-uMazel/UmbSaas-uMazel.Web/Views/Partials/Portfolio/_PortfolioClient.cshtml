@@ -1,0 +1,11 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<PagePortfolioItem>
+
+@if (string.IsNullOrEmpty(Model.Client))
+{
+    return;
+}
+    <p>
+        <strong class="dark-color">@Umbraco.GetDictionaryValue("Portfolio.Client") :</strong>@Model.Client
+    </p>
+
+

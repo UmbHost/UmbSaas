@@ -1,0 +1,12 @@
+﻿@using DotSee.Common
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<PagePortfolioItem>
+
+@if (Model.Link != null && Model.Link.Count() != 0)
+{
+    @Html.Partial(MVC.Partials.Views.Portfolio._PortfolioProjectInfoWithLink, Model)
+}
+else
+{
+    @Html.Partial(MVC.Partials.Views.Portfolio._PortfolioProjectInfo, Model)
+}

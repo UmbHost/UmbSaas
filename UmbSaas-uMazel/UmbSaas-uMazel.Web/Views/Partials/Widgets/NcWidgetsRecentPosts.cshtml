@@ -1,0 +1,44 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<NcWidgetsRecentPosts>
+
+@using DotSee.SiteBlog
+@using System.Linq
+@using DotSee.Common
+
+@{
+    var currPage = Umbraco.AssignedContentItem;
+    PageBlogList blogRoot = currPage.AncestorOrSelf<PageBlogList>();
+    PageHome homePage = currPage.AncestorOrSelf(1) as PageHome;
+    if (blogRoot.HideRecentArticles) { return; }
+    int maxArticles = Model.MaxRecentArticlesToShow;
+
+    var items = blogRoot.Descendants<PageArticleItem>()
+        .OrderByDescending(x => x.PostDate)
+        .Take((maxArticles == 0) ? 3 : maxArticles);
+}
+
+<div class="sidebar-widget">
+    <h5>@Model.Title</h5>
+    <hr>
+    <ul class="widget-post">
+        @foreach (PageArticleItem item in items)
+        {
+            <li>
+                @{
+                    IPublishedContent thumb = item.Image;
+                    if (thumb != null)
+                    {
+                        string fullImageUrl = thumb.GetCropUrl(width: 55, height: 45);
+                        <a class="widget-post-media">
+                            <img src="@fullImageUrl">
+                        </a>
+                    }
+                }
+
+                <div class="widget-post-info">
+                    <h6><a href="@item.Url">@item.GetPageTitleForMenu()</a></h6>
+                    <div class="post-meta"><span>@item.GetPostDate()</span></div>
+                </div>
+            </li>
+        }
+    </ul>
+</div>

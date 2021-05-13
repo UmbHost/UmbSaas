@@ -1,0 +1,22 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<Umbraco.Core.Models.Blocks.BlockListItem>
+
+@{
+    SectionTestimonialsBlock currSection = Model.Content as SectionTestimonialsBlock;
+    SectionTestimonialsBlockSettings settings = Model.Settings as SectionTestimonialsBlockSettings;
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#section_@currSection.Key.ToString() .testimonial-carousel').owlCarousel({
+            autoPlay: @((!settings.ManualPlay).ToString().ToLower()),
+            autoHeight: @settings.AutoHeight.ToString().ToLower(),
+            stopOnHover: @settings.StopOnHover.ToString().ToLower(),
+            singleItem: true,
+            slideSpeed: (@settings.SlideSpeed==0 ? 350 : @settings.SlideSpeed),
+            pagination: @settings.ShowBullets.ToString().ToLower(),  // Show pagination buttons
+            navigation: @settings.ShowNavigationButtons.ToString().ToLower(),  // Hide next and prev buttons
+            navigationText: ["<i class='fa fa-angle-left'></i>", "<i class='fa fa-angle-right'></i>"],
+            //  responsive: true
+        });
+    });
+</script>

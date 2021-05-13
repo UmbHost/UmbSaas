@@ -1,0 +1,7 @@
+﻿@using Site.Core.ViewModels;
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<ProductCounterViewModel>
+
+<div class="float-right float-none-xs">
+        <p>@Model.StartingItem – @Model.EndingItem @Umbraco.GetDictionaryValue("Products.Of") @Model.TotalItems @Umbraco.GetDictionaryValue("Products.Results")</p>
+</div>

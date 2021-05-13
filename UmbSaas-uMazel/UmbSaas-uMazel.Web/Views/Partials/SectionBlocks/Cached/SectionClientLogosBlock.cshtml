@@ -1,0 +1,69 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<Umbraco.Core.Models.Blocks.BlockListItem>
+@using Site.Core;
+@using DotSee.Common.Link;
+@using DotSee.Common;
+
+@{
+    SectionClientLogosBlock currSection = Model.Content as SectionClientLogosBlock;
+    SectionClientLogosBlockSettings settings = Model.Settings as SectionClientLogosBlockSettings;
+
+    var logos = (settings.RandomOrder)
+        ? currSection.Items.Select(x => x.Content).OrderBy(x => Guid.NewGuid())
+        : currSection.Items.Select(x => x.Content);
+
+    string cssClass = Utils.ConcatCssClasses(
+        new string[] {
+          settings.GetSectionEffectCssClass()
+        , settings.GetSectionPtb()
+        , settings.GetSectionMtb()
+            });
+}
+
+<section id="section_@currSection.Key.ToString()" class="@cssClass">
+    <div class="container">
+
+        @Html.Partial(MVC.Shared.Views.Molecules._SectionBlockTitle, Model)
+
+        <div class="owl-carousel client-carousel nf-carousel-theme ">
+
+            @foreach (BlockClientLogoItem item in currSection.Items.Select(x => x.Content))
+            {
+                <div class="item">
+                    @if (settings.HideTextBubbles)
+                    {
+                        @DisplayClientLogo(item)
+                    }
+                    else
+                    {
+                        <div class="tipped" data-title="@item.Title" data-tipper-options='{"direction":"bottom"}'>
+                            @DisplayClientLogo(item)
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+@helper DisplayClientLogo(BlockClientLogoItem item)
+{
+
+    IPublishedContent img = item.Logo;
+
+    string imageUrl = (img == null) ? "" : img.GetCropUrl(width: 200, height: 200, imageCropMode: global::Umbraco.Web.Models.ImageCropMode.Max, upScale: false);
+
+    <div class="client-logo">
+        @if (item.Link != null && item.Link.Count() != 0)
+        {
+            LinkItem link = item.Link.First().Content.GetLink();
+            string imgTag = string.Format("<img src=\"{0}\" alt=\"{1}\" width=\"230\" />", imageUrl, item.Title);
+
+            @item.Link.First().Content.GetLinkMarkup(altCaption: imgTag)
+
+        }
+        else
+        {
+            <img src="@imageUrl" alt="@item.Title" />
+        }
+    </div>
+}

@@ -1,0 +1,7 @@
+﻿@using DotSee.SiteBlog
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<PageBlogListViewModel>
+
+@if (!string.IsNullOrEmpty(Model.CustomMessage))
+{
+    <h6 class="warning">@Model.CustomMessage <a class="btn btn-sm" href="@Model.Content.Url()">@Umbraco.GetDictionaryValue("Blog.FilterBy.Cancel")</a></h6>
+}

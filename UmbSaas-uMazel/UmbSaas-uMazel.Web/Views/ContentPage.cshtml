@@ -1,0 +1,23 @@
+﻿@using Site.Core;
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<PageContent>
+@{
+    Layout = "siteTemplate.cshtml";
+    PageContent currPage = Model;
+
+    //Pass a value to push down content a bit if no background image is set.
+    bool pushDown = (!(new PageHeaderUtils(currPage).HasHeaderImage)) && !currPage.IntroSection.Any();
+
+    string culture = System.Threading.Thread.CurrentThread.CurrentUICulture.Name;
+}
+
+@Html.Action(MVC.PageBackgroundImage.ActionNames.Index, MVC.PageBackgroundImage.Name, new { culture = culture })
+
+@if (pushDown)
+{
+    <div class="spacer-75"></div>
+}
+
+<main id="main">
+    @Html.Partial(MVC.Shared.Views.Common._PageBlockRenderer, currPage)
+</main>

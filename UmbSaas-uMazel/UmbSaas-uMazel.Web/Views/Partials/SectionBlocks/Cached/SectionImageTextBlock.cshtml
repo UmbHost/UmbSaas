@@ -1,0 +1,41 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<Umbraco.Core.Models.Blocks.BlockListItem>
+
+@using Site.Core;
+@using Site.Core.ViewModels;
+@using DotSee.Common;
+@using DotSee.ResponsiveImages;
+@using DotSee.Common;
+@using System.Text;
+
+@{
+    SectionImageTextBlock currSection = Model.Content as SectionImageTextBlock;
+    SectionImageTextBlockSettings settings = Model.Settings as SectionImageTextBlockSettings;
+
+    SrcSetManager ssm = new SrcSetManager(currSection.Image, "sectionImageText");
+
+    string cssClass = Utils.ConcatCssClasses(
+        new string[] {
+        settings.GetSectionPtb()
+        , settings.GetSectionMtb()
+    });
+
+    string cssClassText = (currSection.ImageLeftSide) ? "col-sm-push-6" : null;
+    string cssClassImage = (currSection.ImageLeftSide) ? "col-sm-pull-6" : null;
+
+}
+
+<section id="section_@currSection.Key.ToString()" class="imageText @cssClass">
+
+    <div class="container">
+
+        <div class="row">
+            <div class="text mb-sm-15 col-xs-12 col-sm-6 @cssClassText">
+                <h3>@currSection.SectionTitle</h3>
+                <div class="text">@currSection.Text</div>
+            </div>
+            <div class="image mb-sm-15 col-xs-12 col-sm-6 @cssClassImage">
+                @ssm.CreatePictureElement(imageAlt: currSection.SectionTitle)
+            </div>
+        </div>
+    </div>
+</section>

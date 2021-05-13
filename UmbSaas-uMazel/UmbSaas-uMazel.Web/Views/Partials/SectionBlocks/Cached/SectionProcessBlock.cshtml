@@ -1,0 +1,74 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<Umbraco.Core.Models.Blocks.BlockListItem>
+
+@using Site.Core;
+@using DotSee.Common.Link;
+
+@{
+    SectionProcessBlock currSection = Model.Content as SectionProcessBlock;
+    SectionProcessBlockSettings settings = Model.Settings as SectionProcessBlockSettings;
+}
+<section id="section_@currSection.Key.ToString()" class="@settings.GetSectionPtb() @settings.GetSectionMtb()">
+    <div class="@settings.GetSectionEffectCssClass() container text-center">
+
+        @Html.Partial(MVC.Shared.Views.Molecules._SectionBlockTitle, Model)
+
+        <div class="row">
+
+            @foreach (BlockProcessItem item in currSection.Items.Select(x => x.Content))
+            {
+                int cols = 12 / currSection.Items.Count;
+                string push = 12 % currSection.Items.Count != 0 ? "col-md-push-1" : string.Empty;
+                string icon = item.Icon.ToString();
+                string bubbleText = item.BubbleText;
+
+                LinkItem link = (item.Link != null && item.Link.Count() != 0) ? item.Link.First().Content.GetLink() : null;
+
+                <div class="@push col-md-@cols col-sm-4 col-xs-6">
+                    @DisplayProcessItem(icon, item.Title, bubbleText, settings, link)
+                </div>
+
+            }
+        </div>
+    </div>
+</section>
+
+@helper DisplayProcessItem(string icon, string title, string bubbleText, SectionProcessBlockSettings settings)
+{
+    if (string.IsNullOrEmpty(bubbleText))
+    {
+        @DisplayProcessItem(icon, title)
+    }
+    else
+    {
+
+        string bubblePosition = (settings.BubblePosition.IsNullOrWhiteSpace()) ? "top" : settings.BubblePosition.ToString().ToLower();
+
+        <div class="tipped" data-title="@bubbleText" data-tipper-options='{
+             "direction":"@bubblePosition",
+             "follow":@settings.BubbleFollow.ToString().ToLower(),
+             "delay":"@settings.BubbleDelay.ToString()"
+             }'>
+            @DisplayProcessItem(icon, title)
+        </div>
+    }
+}
+
+@helper DisplayProcessItem(string icon, string title)
+{
+    <div class="page-icon-top"><i class="@icon"></i></div>
+    <h6>@title</h6>
+}
+
+@helper DisplayProcessItem(string icon, string title, string bubbleText, SectionProcessBlockSettings settings, LinkItem link)
+{
+    if (link == null)
+    {
+        @DisplayProcessItem(icon, title, bubbleText, settings)
+    }
+    else
+    {
+        <a href="@link.Url" target="@link.Target">
+            @DisplayProcessItem(icon, title, bubbleText, settings)
+        </a>
+    }
+}

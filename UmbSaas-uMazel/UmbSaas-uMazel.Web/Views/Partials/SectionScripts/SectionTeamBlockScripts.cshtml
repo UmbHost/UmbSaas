@@ -1,0 +1,26 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<Umbraco.Core.Models.Blocks.BlockListItem>
+
+@{
+    SectionTeamBlock currSection = Model.Content as SectionTeamBlock;
+    SectionTeamBlockSettings settings = Model.Settings as SectionTeamBlockSettings;
+}
+
+@if (currSection.Appearance == "Slider")
+{
+    <script type="text/javascript">
+        $('#section_' + '@currSection.Key.ToString()' + ' .team-carousel').owlCarousel({
+            autoPlay: @((!settings.ManualPlay).ToString().ToLower()),
+            autoHeight: @settings.AutoHeight.ToString().ToLower(),
+            stopOnHover: @settings.StopOnHover.ToString().ToLower(),
+            slideSpeed: (@settings.SlideSpeed==0 ? 400 : @settings.SlideSpeed),
+            items: 4,
+            itemsDesktop: [1170, 4],
+            itemsDesktopSmall: [1024, 2],
+            itemsTabletSmall: [768, 1],
+            itemsMobile: [480, 1],
+            pagination: @settings.ShowBullets.ToString().ToLower(),  // Show pagination buttons
+            navigation: @settings.ShowNavigationButtons.ToString().ToLower(),  // Hide next and prev buttons
+            navigationText: ["<i class='fa fa-angle-left'></i>", "<i class='fa fa-angle-right'></i>"]
+        });
+    </script>
+}

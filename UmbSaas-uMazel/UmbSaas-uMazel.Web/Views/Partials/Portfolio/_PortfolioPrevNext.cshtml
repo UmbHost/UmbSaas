@@ -1,0 +1,46 @@
+﻿@using DotSee.Common
+@using Site.Core
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<PagePortfolioItem>
+
+@{ 
+    var portfolioRoot = Model.AncestorOrSelf<PagePortfolio>();
+    if (portfolioRoot.HideNextPrevious) { return; }
+
+    List<PagePortfolioItem>
+    prevNext = Model.GetPrevNext();
+    PagePortfolioItem prevItem = (PagePortfolioItem)prevNext[0];
+    PagePortfolioItem nextItem = (PagePortfolioItem)prevNext[1];
+}
+
+    @if (prevItem != null || nextItem != null)
+    {
+    <section class="mb-60">
+        <div class="container">
+            <div class="item-nav">
+                @if (prevItem != null)
+                {
+                    <a class="item-prev" href="@prevItem.Url()">
+                        <div class="prev-btn"><i class="fa fa-angle-left"></i></div>
+                        <div class="item-prev-text xs-hidden">
+                            <h6>@prevItem.GetPageTitleForMenu()</h6>
+                        </div>
+                    </a>
+                }
+                <a class="item-all-view" href="@portfolioRoot.Url()">
+                    <h6>@Umbraco.GetDictionaryValue("Portfolio.AllWork")</h6>
+                </a>
+                @if (nextItem != null)
+                {
+                    <a class="item-next" href="@nextItem.Url()">
+                        <div class="next-btn"><i class="fa fa-angle-right"></i></div>
+                        <div class="item-next-text xs-hidden">
+                            <h6>@nextItem.GetPageTitleForMenu()</h6>
+                        </div>
+                    </a>
+                }
+            </div>
+        </div>
+    </section>
+
+    }

@@ -1,0 +1,17 @@
+﻿@using DotSee.Common
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<PagePortfolioItem>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="owl-carousel image-slider o-flow-hidden">
+            @foreach (IPublishedContent image in Model.ImageGallery)
+            {
+                string fullImageUrl = image.GetCropUrl(width: 1150, height: 766, upScale: true);
+                <div class="item">
+                    <img src="@fullImageUrl" alt="@Model.GetPageTitleInternal()">
+                </div>
+            }
+        </div>
+    </div>
+</div>

@@ -1,0 +1,72 @@
+﻿@using DotSee.Common;
+@using Site.Core;
+@using Umbraco.Core.Composing;
+
+@inherits  UmbracoViewPage<IEnumerable<NcScriptItem>>
+
+@foreach (NcScriptItem item in Model.Select(x => new NcScriptItem(x)))
+{
+    string cacheKey = CacheLiterals.HasExclusions + item.Title + "_" + System.Threading.Thread.CurrentThread.CurrentCulture.Name.ToString() + "_" + Umbraco.Content(ViewData["currPageId"]).AncestorOrSelf(1).Id.ToString();
+    bool hasExclusions = (bool)Current.AppCaches.RuntimeCache.Get(
+    cacheKey,
+    () => (item.Exclusions != null && item.Exclusions.Any()));
+
+    int currPageId = (int)ViewData["currPageId"];
+
+    //Don't do the loop if exclusions are not defined
+    if (hasExclusions)
+    {
+        bool found = false;
+
+        //Since we're using a picker, some pages may be trashed so just try/catch here.
+        //Better safe than sorry :)
+        try
+        {
+            IPublishedContent currPage = Umbraco.Content(currPageId);
+            foreach (IPublishedContent excludedItem in item.Exclusions)
+            {
+                if (currPage.ContainsInPath(excludedItem))
+                {
+                    found = true;
+                    continue;
+                }
+            }
+        }
+        catch
+        {
+            //If an error occurs, just continue
+            found = true;
+        }
+        if (found) { continue; }
+    }
+
+    if (item.CookieLevel.IsNullOrWhiteSpace())
+    {
+        @Html.Raw(item.Content)
+
+    }
+    else
+    {
+        bool hasStatisticsCookie = Request.Cookies["cookie_level_statistics"] != null ? Request.Cookies["cookie_level_statistics"].Value == "statistics" : false;
+        bool hasMarketingCookie = Request.Cookies["cookie_level_marketing"] != null ? Request.Cookies["cookie_level_marketing"].Value == "marketing" : false;
+
+        switch (item.CookieLevel)
+        {
+            case "Statistics":
+                if (hasStatisticsCookie)
+                {
+                    @Html.Raw(item.Content);
+                }
+                break;
+            case "Marketing":
+                if (hasMarketingCookie)
+                {
+                    @Html.Raw(item.Content);
+                }
+                break;
+            default:
+                @Html.Raw(item.Content);
+                break;
+        }
+    }
+}

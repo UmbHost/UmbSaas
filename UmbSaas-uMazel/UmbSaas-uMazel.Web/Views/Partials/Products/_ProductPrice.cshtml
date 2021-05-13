@@ -1,0 +1,36 @@
+﻿@using Site.Core.ViewModels;
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<ProductPriceViewModel>
+
+
+@if (Model.HidePrices)
+{
+    return;
+}
+else
+{
+    if (Model.Price > 0)
+    {
+        <div class="shop-item-price">
+            @if (Model.OldPrice > 0)
+            {
+                if (Model.DisplayCurrencyAtTheEndOfPrice)
+                {
+                    <del>@Model.OldPrice@Model.Currency</del>
+                }
+                else
+                {
+                    <del>@Model.Currency@Model.OldPrice</del>
+                }
+            }
+            @if (Model.DisplayCurrencyAtTheEndOfPrice)
+            {
+                <span>@Model.Price@Model.Currency</span>
+            }
+            else
+            {
+                <span>@Model.Currency@Model.Price</span>
+            }
+        </div>
+    }
+}

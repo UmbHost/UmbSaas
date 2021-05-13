@@ -1,0 +1,53 @@
+﻿@inherits  UmbracoViewPage<PagePortfolioItem>
+
+@using DotSee.Common;
+@using ClientDependency.Core.Mvc;
+
+@{
+    Layout = "siteTemplate.cshtml";
+    PagePortfolioItem currPage = Model;
+    PagePortfolio portfolioRoot = Model.Ancestor<PagePortfolio>();
+
+    bool hideDates = currPage.DoNotDisplayReleaseDate;
+    string dateFormat = (string.IsNullOrEmpty(portfolioRoot.DateFormat)) ? "dd/MM/yyyy" : portfolioRoot.DateFormat;
+
+    int cacheDuration = 1800;
+    int relatedCacheDuration = (portfolioRoot.RandomRelated) ? 60 : 1800;
+
+    string culture = System.Threading.Thread.CurrentThread.CurrentUICulture.Name;
+
+    Html.RequiresCss("/Css/plugin/jquery.fs.tipper.css", CdfPriority.Medium, CdfGroup.Section);
+    Html.RequiresJs("/scripts/plugin/jquery.fs.tipper.min.js", CdfPriority.Medium, CdfGroup.Section);
+    Html.RequiresJs("/scripts/plugin/jquery.stellar.min.js", CdfPriority.Medium, CdfGroup.Section);
+    Html.RequiresCss("/Css/plugin/owl.carousel.css", CdfPriority.Medium, CdfGroup.Section);
+    Html.RequiresJs("/scripts/plugin/owl.carousel.min.js", CdfPriority.Medium, CdfGroup.Section);
+}
+
+@Html.Action(MVC.PageBackgroundImage.ActionNames.Index, MVC.PageBackgroundImage.Name, new { culture = culture })
+
+<section class="pt pt-sm-80 portfolioPage">
+    <div class="container">
+
+        @Html.CachedPartial(MVC.Partials.Views.Portfolio._PortfolioProjectInfoSelector, currPage, cacheDuration, true)
+        @Html.CachedPartial(MVC.Partials.Views.Portfolio._PortfolioVideo, currPage, 1800, true)
+        @Html.CachedPartial(MVC.Partials.Views.Portfolio._PortfolioTopImage, currPage, 1800, true)
+
+        <div class="row mtb-60 mtb-xs-30">
+            <div class="col-md-4 mb-30">
+                <div class="project-detail-block">
+                    @Html.CachedPartial(MVC.Partials.Views.Portfolio._PortfolioCategories, currPage, cacheDuration, true)
+                    @Html.CachedPartial(MVC.Partials.Views.Portfolio._PortfolioRelease, currPage, cacheDuration, true)
+                    @Html.CachedPartial(MVC.Partials.Views.Portfolio._PortfolioClient, currPage, cacheDuration, true)
+                    @Html.CachedPartial(MVC.Partials.Views.Portfolio._PortfolioCustomFields, currPage, cacheDuration, true)
+                </div>
+            </div>
+            <div class="col-md-8">
+                @Html.Raw(currPage.Content)
+            </div>
+        </div>
+    </div>
+</section>
+
+@Html.CachedPartial(MVC.Partials.Views.Portfolio._PortfolioRelatedItems, currPage, relatedCacheDuration, true)
+@Html.CachedPartial(MVC.Partials.Views.Portfolio._PortfolioPrevNext, currPage, cacheDuration, true)
+

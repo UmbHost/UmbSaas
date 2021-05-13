@@ -1,0 +1,56 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<Umbraco.Core.Models.Blocks.BlockListItem>
+
+@using Site.Core;
+@using DotSee.Common;
+
+@{
+    SectionFaqBlock currSection = Model.Content as SectionFaqBlock;
+    SectionFaqBlockSettings settings = Model.Settings as SectionFaqBlockSettings;
+
+    bool isPartOfMultiCol = (ViewData["isMultiCol"] ?? "0").ToString() == "1";
+    string cssClass = (isPartOfMultiCol) ? "col-md-12" : "col-md-8 col-md-offset-2";
+
+    string cssSectionClass = Utils.ConcatCssClasses(new string[] {
+          settings.GetSectionEffectCssClass()
+        , settings.GetSectionPtb()
+        , settings.GetSectionMtb()
+             });
+
+
+}
+
+@if (!isPartOfMultiCol)
+{
+    <section id="section_@currSection.Key.ToString()" class="@cssSectionClass">
+        <div class="container">
+            @content(currSection, cssClass)
+        </div>
+    </section>
+}
+else
+{
+    @content(currSection, cssClass)
+}
+
+
+@helper content(SectionFaqBlock currSection, string cssClass)
+{
+    string faqCss = "faq-" + currSection.Key.ToString();
+
+    <div class="row">
+        @Html.Partial(MVC.Shared.Views.Molecules._SectionBlockTitle, Model)
+        <div class="@cssClass">
+            <div class="accordion @faqCss">
+                @foreach (BlockFaqItem item in currSection.Items.Select(x => x.Content))
+                {
+                    <div class="accordion-section @faqCss">
+                        <h6 class="accordion-title @faqCss">@item.Question</h6>
+                        <div class="accordion-content @faqCss">
+                            @item.Answer
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+}

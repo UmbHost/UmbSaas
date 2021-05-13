@@ -1,0 +1,53 @@
+﻿@using DotSee.Common
+@using Site.Core
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<PageContentWithSidebar>
+@{
+    Layout = "siteTemplate.cshtml";
+    PageContentWithSidebar currPage = Model;
+    string culture = System.Threading.Thread.CurrentThread.CurrentUICulture.Name;
+
+}
+
+@Html.Action(MVC.PageBackgroundImage.ActionNames.Index, MVC.PageBackgroundImage.Name, new { culture = culture })
+
+<!-- Sidebar Section -->
+<section class="ptb ptb-sm-80">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3 col-sm-4 mt-xs-30">
+
+                <div class="sidebar-widget">
+                    <h5>Product Categories</h5>
+                    <hr>
+                    <ul>
+                        <li><a>Photography</a></li>
+                        <li><a>Web Design</a></li>
+                        <li><a>Lifestyle</a></li>
+                        <li><a>Responsive</a></li>
+                        <li><a>MultiPurpose Theme</a></li>
+                        <li><a>Agency</a></li>
+                        <li><a>Portfolio</a></li>
+                        <li><a>Multiprapose</a></li>
+                        <li><a>Multi Page</a></li>
+                        <li><a>One Page</a></li>
+                        <li><a>Flexible</a></li>
+                        <li><a>Clean</a></li>
+                    </ul>
+                </div>
+
+
+            </div>
+            <div class="col-md-9 col-sm-8">
+
+                <main id="main">
+                    @Html.Partial(MVC.Shared.Views.Common._PageSectionRenderer, currPage)
+                </main>
+
+
+            </div>
+        </div>
+
+    </div>
+</section>
+<!-- End Sidebar Section -->

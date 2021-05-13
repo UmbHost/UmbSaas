@@ -1,0 +1,19 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<Umbraco.Core.Models.Blocks.BlockListItem>
+
+@{
+    SectionFaqBlock currSection = Model.Content as SectionFaqBlock;
+    string faqCss = "faq-" + currSection.Key.ToString();
+ }
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $('.accordion-title.@faqCss').click(function (e) {
+            
+            $(this).next().slideToggle('easeOut');
+            $(this).toggleClass('active');
+            $(".accordion-content.@faqCss").not($(this).next()).slideUp('easeIn');
+            $(".accordion-title.@faqCss").not($(this)).removeClass('active');
+        });
+        $(".accordion-content.@faqCss").addClass("default-hidden");
+    });
+</script>

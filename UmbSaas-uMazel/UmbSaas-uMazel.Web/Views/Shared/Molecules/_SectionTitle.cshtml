@@ -1,0 +1,72 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<IAbstractSectionTitle>
+
+@{
+    if (Model.HideTitle) { return; }
+
+    int titleSpacing = 0;
+    if (Model.TitleSpacing != null && Model.TitleSpacing != "")
+    {
+        titleSpacing = int.Parse(Model.TitleSpacing);
+    }
+    else
+    {
+        switch (Model.ContentType.Alias)
+        {
+            case SectionAccordion.ModelTypeAlias:
+            case SectionActionBox.ModelTypeAlias:
+            case SectionPercentages.ModelTypeAlias:
+                titleSpacing = 15;
+                break;
+            case SectionFeatures.ModelTypeAlias:
+                titleSpacing = 0;
+                break;
+            default:
+                titleSpacing = 30;
+                break;
+        }
+    }
+
+    string titleMarkup = "";
+    switch (Model.TitleSize)
+    {
+        case "Normal":
+            titleMarkup = string.Format("<h3>{0}</h3>", Model.Name);
+            break;
+        case "Small":
+            titleMarkup = string.Format("<h4>{0}</h4>", Model.Name);
+            break;
+        case "Extra Small":
+            titleMarkup = string.Format("<h5>{0}</h5>", Model.Name);
+            break;
+        case "Tiny":
+            titleMarkup = string.Format("<h6>{0}</h6>", Model.Name);
+            break;
+        default:
+            titleMarkup = string.Format("<h3>{0}</h3>", Model.Name);
+            break;
+    }
+
+    string titleOrientation = "text-center";
+    switch (Model.TitleOrientation)
+    {
+        case "Left":
+            titleOrientation = "text-left";
+            break;
+        case "Right":
+            titleOrientation = "text-right";
+            break;
+        case "Center":
+            titleOrientation = "text-center";
+            break;
+        default:
+            titleOrientation = "text-center";
+            break;
+
+    }
+}
+
+<div class="@titleOrientation">
+    @Html.Raw(titleMarkup)
+</div>
+
+<div class="spacer-@titleSpacing"></div>

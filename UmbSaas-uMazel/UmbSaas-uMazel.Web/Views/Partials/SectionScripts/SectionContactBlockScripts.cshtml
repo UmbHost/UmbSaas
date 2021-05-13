@@ -1,0 +1,49 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<Umbraco.Core.Models.Blocks.BlockListItem>
+
+@{
+    SectionContactBlock currSection = Model.Content as SectionContactBlock;
+    SectionContactBlockSettings settings = Model.Settings as SectionContactBlockSettings;
+}
+
+<script type="text/javascript">
+
+    function ShowContactError() {
+        $(".errorContent").show();
+        $("#contactFormHolder").hide();
+    }
+
+    function ShowContactSuccess(arg) {
+        if (arg.Success === true) {
+            $("#contactSuccess").show();
+            $("#contactFormHolder").hide();
+        }
+        else {
+            $(".successContent").show();
+            $("#contactFormHolder").hide();
+
+        }
+    }
+
+    function onSubmit(token) {
+        $('#contactForm').submit();
+    }
+
+    $(document).ready(function () {
+
+        function validate(event) {
+            event.preventDefault();
+            if ($('#contactForm').valid()) {
+                grecaptcha.execute();
+            }
+        }
+
+        function onload() {
+            var element = document.getElementById('form-submit');
+            element.onclick = validate;
+        }
+
+        onload();
+
+    });
+
+</script>

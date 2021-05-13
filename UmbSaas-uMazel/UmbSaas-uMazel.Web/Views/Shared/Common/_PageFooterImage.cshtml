@@ -1,0 +1,32 @@
+﻿@using DotSee.Common.Link;
+@using System.Collections.Specialized;
+@using Site.Core;
+@using DotSee.ResponsiveImages;
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage
+
+@{
+    ConfigMenuAndFooterSettings footerSettings = CachedNodes.GetMenuAndFooterSettingsNode();
+    ConfigGlobalSettings configPage = CachedNodes.GetConfigNode();
+
+    //If user image is not set, use default logo
+    var footerImage = (footerSettings.FooterImage == null) ? configPage.Logo : footerSettings.FooterImage;
+}
+
+<div class="col-md-3 col-sm-3 col-xs-12 mb-xs-30">
+    @if (footerImage != null)
+    {
+        SrcSetManager ssm = new SrcSetManager(footerImage, "footerimage");
+
+        if (footerSettings.FooterImageLink != null && footerSettings.FooterImageLink.Any())
+        {
+            IHtmlString altCaption = ssm.CreatePictureElement();
+            @Link.GetLinkMarkup(footerSettings.FooterImageLink.First(), altCaption: altCaption, attributes: new ListDictionary() { { "class", "footer-logo" } })
+
+        }
+        else
+        {
+            @ssm.CreatePictureElement()
+        }
+    }
+</div>

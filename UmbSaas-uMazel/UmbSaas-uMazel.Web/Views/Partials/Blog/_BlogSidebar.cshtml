@@ -1,0 +1,25 @@
+﻿@using Umbraco.Web.PublishedModels;
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<PageBlogList>
+<div class="col-lg-3 col-md-3 mt-25 mt-sm-30">
+    @{
+        foreach (var item in Model.Widgets)
+        {
+            <div class="sidebar-widget">
+                @switch (item.ContentType.Alias)
+                {
+
+                    case NcWidgetCategoriesList.ModelTypeAlias:
+                        @Html.Action(MVC.BlogCategories.ActionNames.Index, MVC.BlogCategories.Name, new { model = Model, widget = item, cult = System.Threading.Thread.CurrentThread.CurrentUICulture.Name })
+                        break;
+                    case NcWidgetPopularTags.ModelTypeAlias:
+                        @Html.Action(MVC.BlogTags.ActionNames.GetTags, MVC.BlogTags.Name, new { model = Model, widget = item, cult = System.Threading.Thread.CurrentThread.CurrentUICulture.Name })
+                        break;
+                    default:
+                        @Html.CachedPartial("Widgets/" + item.ContentType.Alias, item, 600, false, false, null, contextualKeyBuilder: (m, viewData) => item.Key.ToString() + System.Threading.Thread.CurrentThread.CurrentUICulture.NativeName.ToString())
+                        break;
+                }
+            </div>
+        }
+    }
+</div>

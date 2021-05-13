@@ -1,0 +1,186 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<Umbraco.Core.Models.Blocks.BlockListItem>
+
+@using Site.Core;
+@using Site.Core.ViewModels;
+@using DotSee.ResponsiveImages;
+@using DotSee.Common;
+@using System.Text;
+
+@{
+    //Standard references
+    SectionImageGalleryBlock currSection = Model.Content as SectionImageGalleryBlock;
+    SectionImageGalleryBlockSettings settings = Model.Settings as SectionImageGalleryBlockSettings;
+
+    //Decide if masonry or grid
+    string containerTypeClass = (currSection.Masonry) ? "masonry" : "grid";
+
+    //Get spacing
+    string spacingClass = (currSection.Spacing) ? "spacing" : "";
+
+    //Get num of columns
+    var noOfCols = currSection.Columns;
+
+    //Construct class
+    string itemClass =
+        (currSection.Spacing) ?
+        string.Format("container-{0} nf-col-{1}", containerTypeClass, noOfCols) :
+        string.Format("row container-{0} nf-col-{1}", containerTypeClass, noOfCols);
+
+
+    string cssClass = Utils.ConcatCssClasses(
+    new string[] {
+              settings.GetSectionEffectCssClass()
+            , settings.GetSectionPtb()
+            , settings.GetSectionMtb()
+            , "text-center"
+            });
+
+    var categories = new List<CategoryImageGallery>();
+
+    foreach (BlockImageGalleryItem item in currSection.Items.Select(i => i.Content))
+    {
+        if (item.Categories != null && item.Categories.Any())
+        {
+            foreach (CategoryImageGallery category in item.Categories)
+            {
+                if (!categories.Contains(category))
+                {
+                    categories.Add(category);
+                }
+            }
+        }
+    }
+}
+
+<section id="section_@currSection.Key.ToString()" class="@cssClass">
+
+    <div class="container">
+
+        @Html.Partial(MVC.Shared.Views.Molecules._SectionBlockTitle, Model)
+
+        @*
+            -----------------------------------------------------------------
+            Category filter on top
+            -----------------------------------------------------------------
+        *@
+
+        @if (!currSection.DoNotDisplayCategories)
+        {
+            <div class="row">
+                <ul class="container-filter categories-filter filter-for-@currSection.Key">
+                    @if (!currSection.HideAllCategoryOption)
+                    {
+                        var allOptionLabel =
+                            (currSection.AllOptionLabel.IsNullOrWhiteSpace() ?
+                            Umbraco.GetDictionaryValue("Theme.Gallery.All") : currSection.AllOptionLabel);
+
+                        <li><a class="categories active filter-for-@currSection.Key" data-filter="*">@allOptionLabel</a></li>
+                    }
+                    @foreach (CategoryImageGallery c in categories)
+                    {
+                        string filter = c.Id.ToString();
+                        <li><a class="categories filter-for-@currSection.Key" data-filter=".@filter">@c.Name</a></li>
+                    }
+                </ul>
+            </div>
+        }
+
+        @* End category filter on top *@
+
+        @*
+            -----------------------------------------------------------------
+            Gallery
+            -----------------------------------------------------------------
+        *@
+
+        <div class="container-fluid">
+            <div class="row">
+                <div class="@itemClass">
+
+                    @foreach (BlockImageGalleryItem item in currSection.Items.Select(x => x.Content))
+                    {
+
+                        string categoryNames = "";
+                        string itemCategoriesNoCommas = "";
+                        string itemIdsNoCommas = "";
+
+                        if (!currSection.DoNotDisplayCategories && item.Categories != null)
+                        {
+
+                            //Build the comma delimited list of category names
+                            StringBuilder sb = new StringBuilder(string.Empty);
+                            StringBuilder xb = new StringBuilder(string.Empty);
+
+                            foreach (CategoryImageGallery category in item.Categories.OrderBy(x => x.Name))
+                            {
+                                sb.Append(category.Name);
+                                sb.Append(", ");
+
+                                xb.Append(category.Id);
+                                xb.Append(", ");
+                            }
+
+                            if (!sb.ToString().Equals(string.Empty))
+                            {
+                                categoryNames = sb.ToString().Substring(0, (sb.ToString().Length - 2));
+
+                                itemCategoriesNoCommas = sb.ToString().Replace(" ", "").Replace(",", " ");
+                                itemIdsNoCommas = xb.ToString().Replace(" ", "").Replace(",", " ");
+                            }
+
+                        }
+
+                        string imageThumb = "";
+                        string imageFull = "";
+
+                        //Counter will be used in alt attribute
+                        int counter = 0;
+
+                        //TODO: Get image from media and image cropped correctly
+
+                        IPublishedContent mediaItem = item.Image;
+
+                        imageThumb = (currSection.Masonry) ? mediaItem.GetCropUrl() : mediaItem.GetCropUrl(980, 552);
+                        imageFull = mediaItem.GetCropUrl(width: 1280, height: 1024, imageCropMode: global::Umbraco.Web.Models.ImageCropMode.Max, upScale: currSection.UpscaleImages);
+
+                        SrcSetManager ssm = new SrcSetManager(mediaItem, "imageGallery");
+                        SrcSetManager ssmZoom = new SrcSetManager(mediaItem, "imageGalleryZoom");
+
+
+                        if (!string.IsNullOrEmpty(item.Image.Url))
+                        {
+                            counter++;
+
+                            <div class="nf-item @itemCategoriesNoCommas @spacingClass @itemIdsNoCommas">
+                                <div class="item-box">
+                                    <a class="cbox-gallary1"
+                                       href="@imageFull"
+                                       title="@item.Title"
+                                       data-fancybox="gallery_@currSection.Key.ToString()"
+                                       data-srcset="@ssmZoom.GetSrcSet()">
+
+
+                                        @ssm.CreatePictureElement(imageAlt: item.Title)
+                                        <div class="item-mask">
+                                            <div class="item-caption">
+                                                <h5 class="white">@item.Title</h5>
+                                                @if (!currSection.DoNotDisplayCategories)
+                                                {
+                                                    <p class="white">@categoryNames</p>
+                                                }
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+        @* End Gallery *@
+    </div>
+</section>
+
+
+

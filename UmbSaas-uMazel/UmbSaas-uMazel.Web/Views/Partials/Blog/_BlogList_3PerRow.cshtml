@@ -1,0 +1,63 @@
+﻿@using DotSee.SiteBlog;
+@using Umbraco.Web.PublishedModels;
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<PageBlogListViewModel>
+@{
+    bool noSideBar = Model.BlogRoot.SidebarOptions.ToLower().Contains("none");
+    bool sidebarLeft = Model.BlogRoot.SidebarOptions.ToLower().Contains("left");
+}
+
+<section class="ptb ptb-sm-80">
+    <div class="container">
+        @if (noSideBar)
+        {
+            @Html.Partial(MVC.Partials.Views.Blog._BlogFilterMessage, Model)
+            @RenderMasonryOrGrid()
+        }
+        else
+        {
+            if (sidebarLeft)
+            {
+                @Html.Partial(MVC.Partials.Views.Blog._BlogSidebar, Model.BlogRoot)
+                <div class="col-lg-9 col-md-9">
+                    @Html.Partial(MVC.Partials.Views.Blog._BlogFilterMessage, Model)
+                    @RenderMasonryOrGrid()
+                </div>
+            }
+            else
+            {
+                <div class="col-lg-9 col-md-9">
+                    @Html.Partial(MVC.Partials.Views.Blog._BlogFilterMessage, Model)
+                    @RenderMasonryOrGrid()
+                </div>
+                @Html.Partial(MVC.Partials.Views.Blog._BlogSidebar, Model.BlogRoot)
+            }
+        }
+
+        @Html.Partial(MVC.Shared.Views.Common._PagePager, Model)
+    </div>
+</section>
+
+@helper RenderMasonryOrGrid()
+{
+    if (Model.BlogRoot.MasonryLayout)
+    {
+        <div class="row masonry">
+            @RenderList("blogimagemasonry")
+        </div>
+    }
+    else
+    {
+        <div class="row container-grid">
+            @RenderList("blogimages")
+        </div>
+    }
+}
+
+@helper RenderList(string imagesConfig)
+{
+    foreach (PageArticleItem blogArticle in Model.Items.OrderByDescending(x => x.GetPostDateForSorting()))
+    {
+        @Html.Partial(MVC.Partials.Views.Blog._BlogItem, blogArticle, new ViewDataDictionary { { "imagesConfig", imagesConfig }, { "itemsPerRow", 3 } })
+    }
+}

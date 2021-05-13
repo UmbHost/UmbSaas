@@ -1,0 +1,80 @@
+﻿@using DotSee.Common;
+@using Site.Core;
+@using System.Text.RegularExpressions;
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage
+
+@{
+    ConfigGlobalSettings configPage = CachedNodes.GetConfigNode();
+    ConfigMenuAndFooterSettings footerSettings = CachedNodes.GetMenuAndFooterSettingsNode();
+
+    //If user image is not set, use default logo
+    var footerImage = (footerSettings.FooterImage == null) ? configPage.Logo : footerSettings.FooterImage;
+
+    //Text under image
+    var footerText = footerSettings.FooterTextOnTheLeft;
+
+    //Change order of rows
+    string cssOrder = (footerSettings.SwapRows) ? "order1" : null;
+
+    bool hideFromFooter = false;
+}
+
+<div class="row footer-info mb-sm-30 mb-60">
+    <div class="col-md-3 col-sm-12 col-xs-12 mb-sm-30">
+        @if (footerSettings.FooterTextOnTheLeft != null)
+        {
+            <p class="mb-xs-0">@footerSettings.FooterTextOnTheLeft</p>
+        }
+    </div>
+    <div class="col-md-3 col-sm-6 col-xs-12 mb-sm-30 mb-xs-0">
+        @if (footerSettings.FooterPageLinksCol1 != null && footerSettings.FooterPageLinksCol1.Count() > 0)
+        {
+            <ul class="link">
+                @foreach (IPublishedContent item in footerSettings.FooterPageLinksCol1)
+                {
+                    hideFromFooter = item.Value<bool>(AbstractPage.GetModelPropertyType(m => m.HideFromFooter).Alias);
+                    if (!hideFromFooter)
+                    {
+                        <li><a href="@item.Url()">@item.GetPageTitleForMenu()</a></li>
+                    }
+                }
+            </ul>
+        }
+    </div>
+    <div class="col-md-3 col-sm-6 col-xs-12 mb-sm-30">
+        @if (footerSettings.FooterPageLinksCol2 != null && footerSettings.FooterPageLinksCol2.Count() > 0)
+        {
+            <ul class="link">
+                @foreach (IPublishedContent item in footerSettings.FooterPageLinksCol2)
+                {
+                    hideFromFooter = item.Value<bool>(AbstractPage.GetModelPropertyType(m => m.HideFromFooter).Alias);
+                    if (!hideFromFooter)
+                    {
+                        <li><a href="@item.Url()">@item.GetPageTitleForMenu()</a></li>
+                    }
+                }
+            </ul>
+        }
+    </div>
+    <div class="col-md-3 col-sm-12 col-xs-12">
+        @if (!string.IsNullOrEmpty(footerSettings.FooterAddress))
+        {
+            <p>@footerSettings.FooterAddress</p>
+        }
+        @if (!string.IsNullOrEmpty(footerSettings.FooterEmail) || !string.IsNullOrEmpty(footerSettings.FooterTel))
+        {
+            <ul class="link-small">
+                @if (!string.IsNullOrEmpty(footerSettings.FooterEmail))
+                {
+                    <li><a href="mailto:@footerSettings.FooterEmail"><i class="fas fa-envelope-square left"></i>@footerSettings.FooterEmail</a></li>
+                }
+                @if (!string.IsNullOrEmpty(footerSettings.FooterTel))
+                {
+                    var cleanNumber = System.Text.RegularExpressions.Regex.Replace(footerSettings.FooterTel, "[^a-zA-Z0-9]", string.Empty, RegexOptions.Singleline);
+                    <li><a href="tel:@cleanNumber"><i class="fas fa-phone-square-alt left"></i>@footerSettings.FooterTel</a></li>
+                }
+            </ul>
+        }
+    </div>
+</div>

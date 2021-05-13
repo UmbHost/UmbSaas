@@ -1,0 +1,27 @@
+﻿@using Site.Core
+@using DotSee.ResponsiveImages
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage
+@{
+    IPublishedContent currPage = Model;
+    PageHome homePage = CachedNodes.GetHomePage();
+    ConfigGlobalSettings configPage = CachedNodes.GetConfigNode();
+
+    var logo = configPage.Logo;
+    var alternateLogo = configPage.AlternateLogo == null ? configPage.Logo : configPage.AlternateLogo;
+
+
+    
+  if (logo != null)
+    {
+        SrcSetManager ssm = new SrcSetManager(logo, "logo");
+        SrcSetManager ssmAlt = new SrcSetManager(alternateLogo, "logo");
+        <div class="logo">
+            <a href="@Umbraco.Content(homePage.Id).Url()">
+                @ssm.CreatePictureElement(imageAlt: configPage.SiteName, imageClass: "l-black")
+                @ssmAlt.CreatePictureElement(imageAlt: configPage.SiteName, imageClass: "l-white")
+                @ssm.CreatePictureElement(imageAlt: configPage.SiteName, imageClass: "l-color")
+            </a>
+        </div>
+    }
+}

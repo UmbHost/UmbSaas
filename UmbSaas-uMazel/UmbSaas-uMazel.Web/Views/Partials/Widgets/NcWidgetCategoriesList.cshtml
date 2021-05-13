@@ -1,0 +1,22 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<BlogCategoryViewModel>
+@using DotSee.SiteBlog;
+@{
+    if (!Model.CategoriesEnabled) {return;}
+}
+
+<h5>@Model.Title</h5>
+<hr>
+
+<ul class="category-list slide">
+    @foreach (BlogCategoryItemViewModel category in Model.Items)
+    {
+        string name = (Model.CountEnabled) ? string.Format("{0} ({1})", category.Name, category.ItemCount.ToString()) : category.Name;
+        <li>
+            <a href="@category.Url">@name</a>
+            @if (!string.IsNullOrEmpty(category.RssUrl))
+            {
+                <span>&nbsp;</span><a target="_blank" href="@category.RssUrl">[RSS]</a>
+            }
+        </li>
+    }
+</ul>

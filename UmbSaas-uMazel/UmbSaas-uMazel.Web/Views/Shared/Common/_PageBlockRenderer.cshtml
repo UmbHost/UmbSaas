@@ -1,0 +1,23 @@
+﻿@using Umbraco.Web.PublishedModels;
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage
+
+@{
+    if (!(Model is IAbstractPageSections)) { return; }
+
+    var introBlock = (Model as IAbstractPageSections).IntroSection;
+    
+    if (introBlock.Any(x => (x.Content as IAbstractSectionBlock).Disabled == false))
+    {
+        @Html.Partial(MVC.Shared.Views.Common._RenderBlock, introBlock.Where(x => !(x.Content as IAbstractSectionBlock).Disabled).FirstOrDefault())
+    }
+
+    var blocks = (Model as IAbstractPageSections).Sections;
+    if (!blocks.Any()) { return; }
+
+    foreach (var block in blocks.Where(x => (x.Content as IAbstractSectionBlock).Disabled == false))
+    {
+        @Html.Partial(MVC.Shared.Views.Common._RenderBlock, block)
+    }
+
+}

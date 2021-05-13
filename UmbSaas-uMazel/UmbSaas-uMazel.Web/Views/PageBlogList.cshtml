@@ -1,0 +1,41 @@
+﻿@using DotSee.SiteBlog;
+@using DotSee.Common;
+@using ClientDependency.Core.Mvc;
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<PageBlogListViewModel>
+
+@{
+    Layout = "siteTemplate.cshtml";
+
+    string culture = System.Threading.Thread.CurrentThread.CurrentUICulture.Name;
+
+    Html.RequiresJs("/scripts/plugin/jquery.stellar.min.js", CdfPriority.Medium, CdfGroup.PartiallyUsed);
+    Html.RequiresCss("/Css/plugin/jquery.fs.tipper.css", CdfPriority.Medium, CdfGroup.PartiallyUsed);
+    Html.RequiresJs("/scripts/plugin/jquery.fs.tipper.min.js", CdfPriority.Medium, CdfGroup.PartiallyUsed);
+    Html.RequiresJs("/scripts/plugin/isotope.pkgd.min.js", CdfPriority.Medium, CdfGroup.PartiallyUsed);
+    Html.RequiresJs("/scripts/plugin/masonry.pkgd.min.js", CdfPriority.Medium, CdfGroup.PartiallyUsed);
+    Html.RequiresJs("/scripts/plugin/imagesloaded.pkgd.min.js", CdfPriority.Medium, CdfGroup.PartiallyUsed);
+
+    //Script to initialize either masonry or grid. No need to create a separate "scripts" view since it doesn't use any of the page's properties.
+    //This will run last (hence the "Extras" group)
+    Html.RequiresJs("/scripts/bloglist.init.js", CdfPriority.Medium, CdfGroup.Extras);
+
+    @Html.Action(MVC.PageBackgroundImage.ActionNames.Index, MVC.PageBackgroundImage.Name, new { culture = culture })
+
+    if (!Model.Items.Any()) { return; }
+
+    if (Model.BlogRoot.PostsPerRow == 1)
+    {
+        @Html.Partial(MVC.Partials.Views.Blog._BlogList_1PerRow, Model)
+    }
+    else if (Model.BlogRoot.PostsPerRow == 2)
+    {
+        @Html.Partial(MVC.Partials.Views.Blog._BlogList_2PerRow, Model)
+    }
+    else if (Model.BlogRoot.PostsPerRow == 3)
+    {
+        @Html.Partial(MVC.Partials.Views.Blog._BlogList_3PerRow, Model)
+    }
+}
+
+@Html.Partial(MVC.Shared.Views.Common._PagePager, Model)

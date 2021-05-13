@@ -1,0 +1,8 @@
+﻿{
+    javascript: [
+        '~/App_Plugins/Products/customproductslistview.controller.js'
+    ],
+    css: [
+        '~/App_Plugins/Products/productslist.css'
+    ]
+}

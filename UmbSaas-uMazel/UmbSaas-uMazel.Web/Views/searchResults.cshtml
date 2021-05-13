@@ -1,0 +1,50 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage
+
+@using ClientDependency.Core.Mvc;
+@using DotSee.Common;
+
+@{
+    Layout = "siteTemplate.cshtml";
+
+    var searchQuery = Request.QueryString["q"];
+    Html.RequiresJs("/scripts/lists.js", 10000);
+    string culture = System.Threading.Thread.CurrentThread.CurrentUICulture.Name;
+}
+
+@Html.Action(MVC.PageBackgroundImage.ActionNames.Index, MVC.PageBackgroundImage.Name, new { culture = culture })
+
+@Html.Partial(MVC.Shared.Views.Molecules._ListHiddenFields, Model, new ViewDataDictionary { { "recordsperpage", "10" } }))
+
+<input type="hidden" name="searchQuery" id="searchQuery" value="@searchQuery" />
+
+<main class="main searchresults">
+
+    <article class="container">
+
+        <div class="simple-page">
+
+            <header class="simple-title">
+                <h1>@Model.GetPageTitleInternal()</h1>
+            </header>
+
+            <div class="main-info">
+
+                <div class="left-column">
+                    <div class="main-text">
+                        @if (!string.IsNullOrWhiteSpace(searchQuery))
+                        {
+                            <div class="list">
+                                <ul>
+                                    @Html.Action(MVC.Search.ActionNames.Search, MVC.Search.Name, new { searchQuery = searchQuery, recordsPerPage = 10, culture = System.Threading.Thread.CurrentThread.CurrentUICulture.Name })
+                                </ul>
+                            </div>
+                        }
+                    </div>
+                    @Html.Partial(MVC.Shared.Views.Atoms._ListMoreButton, "searchmore")
+                </div>
+            </div>
+        </div>
+    </article>
+</main>
+
+

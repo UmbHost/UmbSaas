@@ -1,0 +1,12 @@
+﻿@using DotSee.Common
+@using Site.Core
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<PageHome>
+@{
+    Layout = "siteTemplate.cshtml";
+    PageHome currPage = Model;
+}
+
+
+
+@Html.Partial(MVC.Shared.Views.Common._PageBlockRenderer, currPage)

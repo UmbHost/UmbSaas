@@ -1,0 +1,12 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<PagePortfolioItem>
+
+@if (Model.CustomFields != null && Model.CustomFields.Any())
+{
+
+    foreach (NcPortfolioCustomFieldItem item in Model.CustomFields)
+    {
+        <p>
+            <strong class="dark-color">@item.Field :</strong>@item.Value
+        </p>
+    }
+}

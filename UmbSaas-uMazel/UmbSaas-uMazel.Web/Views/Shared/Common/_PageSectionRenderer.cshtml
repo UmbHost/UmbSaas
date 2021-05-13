@@ -1,0 +1,28 @@
+﻿@using Umbraco.Web;
+@using Umbraco.Web.PublishedModels;
+@using Umbraco.Web.Security;
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage
+
+@{
+    bool isUserLoggedInOnBackEnd = new System.Web.HttpContextWrapper(System.Web.HttpContext.Current).GetUmbracoAuthTicket() != null;
+
+    IAbstractSectionFolder sectionFolder = Model.Children<IAbstractSectionFolder>().FirstOrDefault();
+    if (sectionFolder != null)
+    {
+        IEnumerable<IPublishedContent> sections = sectionFolder.Children();
+        foreach (IPublishedContent section in sections)
+        {
+            if (isUserLoggedInOnBackEnd)
+            {
+                var modelid = section.Id.ToString();
+                <div style="z-index:999999;border:dotted;border-width:thin;border-color:#000;display:inline;padding:10px 10px 10px 10px;margin-right:5px;position:relative;top:20px;float:right;background:#f8fe72;font-weight:bold;"><span><a target="_blank" href="/umbraco/#/content/content/edit/@modelid">EDIT</a></span></div>
+            }
+
+            //try
+            //{
+            @Html.Partial(MVC.Shared.Views.Common._RenderSection, section)
+        }
+        //catch { }
+    }
+}

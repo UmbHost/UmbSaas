@@ -1,0 +1,53 @@
+﻿@using DotSee.ResponsiveImages
+@using Site.Core
+@using DotSee.Common.Link
+@using DotSee.Common
+@using System.Collections.Specialized;
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<Umbraco.Core.Models.Blocks.BlockListItem>
+
+@{
+    SectionActionBoxBlock currSection = Model.Content as SectionActionBoxBlock;
+    SectionActionBoxBlockSettings settings = Model.Settings as SectionActionBoxBlockSettings;
+
+    IPublishedContent backgroundImage = settings.Image;
+
+    string sectionClasses = null;
+
+    SrcSetManager ssm = settings.Image != null ? new SrcSetManager(settings.Image, "backgroundfull") : null;
+
+    if (ssm != null)
+    {
+        @ssm.GetBreakPointsCss()
+    }
+
+    sectionClasses = Utils.ConcatCssClasses(new string[] {
+            settings.GetSectionEffectCssClass()
+        , SiteUtils.GetOverlayCssClass((int)settings.Overlay)
+        , (settings.UseLightTextColor) ? "light-color" : "dark-color"
+        , ssm != null ? ssm.GetClassName() : " "
+        , settings.GetSectionPtb()
+        , settings.GetSectionMtb()
+    });
+
+    string buttonClasses = Utils.ConcatCssClasses(new string[] {
+        "btn"
+        , SiteUtils.GetButtonSize(settings)
+        , SiteUtils.GetButtonFill(settings) ?? "btn-white"
+        , "float-right float-none-xs"
+    });
+}
+
+<section id="section_@currSection.Key.ToString()" class="@sectionClasses">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 col-sm-8">
+                <h4 class="">@currSection.SectionTitle</h4>
+                <p class="mb-0">@currSection.Summary</p>
+            </div>
+            <div class="col-md-4 col-sm-4 mt-sm-30">
+                @(currSection.Link.FirstOrDefault()?.Content?.GetLinkMarkup(attributes: new ListDictionary() { { "class", buttonClasses } }))
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,53 @@
+﻿@using Site.Core;
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage
+
+@{
+    IPublishedContent currPage = Model;
+    ConfigGlobalSettings configPage = CachedNodes.GetConfigNode();
+    ConfigMenuAndFooterSettings footerSettings = CachedNodes.GetMenuAndFooterSettingsNode();
+
+    //Change order of rows
+    string cssOrder = (footerSettings.SwapRows) ? "order1" : null;
+
+    string currCultureName = System.Threading.Thread.CurrentThread.CurrentUICulture.Name;
+    string currCultureNativeName = System.Threading.Thread.CurrentThread.CurrentUICulture.NativeName.ToString();
+
+    string contextualKeyForCaching = currPage.Id.ToString() + currCultureNativeName;
+
+}
+
+<footer class="footer pt-80">
+    <div class="container">
+        <div class="row mb-60 @cssOrder">
+
+            @Html.CachedPartial(MVC.Shared.Views.Common._PageFooterImage, Model, 3600, false, contextualKeyBuilder: (m, viewData) => contextualKeyForCaching)
+
+            @{
+                //-------------------------------------------------------------------
+                //Mailchimp info
+                //-------------------------------------------------------------------
+                string apiKey = (string.IsNullOrEmpty(configPage.MailchimpApiKey)) ? System.Configuration.ConfigurationManager.AppSettings.Get("MailchimpApiKey") : configPage.MailchimpApiKey;
+                string listId = configPage.MailchimpListID;
+
+                if (!string.IsNullOrEmpty(apiKey) && !string.IsNullOrEmpty(listId))
+                {
+                    <div class="col-md-4 col-sm-5 col-xs-12 mb-xs-30">
+                        <div class="newsletter">
+                            @Html.Partial(MVC.Shared.Views.Common._NewsletterForm, new Site.Core.Models.NewsletterSubscription())
+                        </div>
+                    </div>
+                }
+            }
+
+            @Html.CachedPartial(MVC.Shared.Views.Common._PageFooterSocial, Model, 3600, false, contextualKeyBuilder: (m, viewData) => contextualKeyForCaching)
+        </div>
+
+        @Html.CachedPartial(MVC.Shared.Views.Common._PageFooterNavigation, Model, 3600, false, contextualKeyBuilder: (m, viewData) => contextualKeyForCaching)
+    </div>
+
+    <hr />
+
+    @Html.CachedPartial(MVC.Shared.Views.Common._PageFooterCopyright, Model, 3600, false, contextualKeyBuilder: (m, viewData) => contextualKeyForCaching)
+
+</footer>

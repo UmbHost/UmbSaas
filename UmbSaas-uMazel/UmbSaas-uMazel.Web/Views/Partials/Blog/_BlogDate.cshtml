@@ -1,0 +1,7 @@
+﻿@using DotSee.SiteBlog;
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<PageArticleItem>
+@{
+    if (Model.Ancestor<PageBlogList>().HideDates) { return; }
+    <span>@Model.GetPostDate()</span>
+}

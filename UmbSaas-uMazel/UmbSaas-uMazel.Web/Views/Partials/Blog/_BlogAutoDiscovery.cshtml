@@ -1,0 +1,6 @@
+﻿@using DotSee.SiteBlog
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<BlogAutoDiscoveryViewModel>
+<link rel="alternate" type="application/rss+xml"
+      title="@Model.Title"
+      href="@Model.Url" />

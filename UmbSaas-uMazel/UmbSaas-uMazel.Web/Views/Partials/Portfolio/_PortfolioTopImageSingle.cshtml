@@ -1,0 +1,13 @@
+﻿@using DotSee.Common
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<PagePortfolioItem>
+
+@{ 
+    string fullImageUrl = Model.ImageGallery.First().GetCropUrl(width: 1150, height: 766, upScale: true);
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <img class="item-container" src="@fullImageUrl" alt="@Model.GetPageTitleInternal()">
+    </div>
+</div>

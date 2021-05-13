@@ -1,0 +1,96 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<Umbraco.Core.Models.Blocks.BlockListItem>
+
+@using Site.Core;
+@using Site.Core.ViewModels;
+@using DotSee.ResponsiveImages;
+@using DotSee.Common;
+@using System.Text;
+
+@{
+    //Standard references
+    SectionSimpleImageGalleryBlock currSection = Model.Content as SectionSimpleImageGalleryBlock;
+    SectionSimpleImageGalleryBlockSettings settings = Model.Settings as SectionSimpleImageGalleryBlockSettings;
+
+    //Decide if masonry or grid
+    string containerTypeClass = (currSection.Masonry) ? "masonry" : "grid";
+
+    //Get spacing
+    string spacingClass = (currSection.Spacing) ? "spacing" : "";
+
+    //Get num of columns
+    var noOfCols = (int)currSection.Columns;
+
+    //Construct class
+    string itemClass = (currSection.Spacing) ? string.Format("container-{0} nf-col-{1}", containerTypeClass, noOfCols) : string.Format("row container-{0} nf-col-{1}", containerTypeClass, noOfCols);
+
+    string cssClass = Utils.ConcatCssClasses(
+        new string[] {
+          settings.GetSectionEffectCssClass()
+        , settings.GetSectionPtb()
+        , settings.GetSectionMtb()
+        , "text-center"
+    });
+
+}
+
+
+<section id="section_@currSection.Key.ToString()" class="@cssClass">
+
+    <div class="container">
+
+        @Html.Partial(MVC.Shared.Views.Molecules._SectionBlockTitle, Model)
+
+        @*
+        -----------------------------------------------------------------
+        Gallery
+        -----------------------------------------------------------------
+        *@
+
+        <div class="container-fluid">
+            <div class="row">
+                <div class="@itemClass">
+
+                    @foreach (var item in currSection.Items)
+                    {
+                        string imageThumb = "";
+                        string imageFull = "";
+
+                        //Counter will be used in alt attribute
+                        int counter = 0;
+
+                        //TODO: Get image from media and image cropped correctly
+
+                        IPublishedContent mediaItem = item;
+
+                        imageThumb = (currSection.Masonry) ? mediaItem.GetCropUrl() : mediaItem.GetCropUrl(980, 552);
+                        imageFull = mediaItem.GetCropUrl(width: 1280, height: 1024, imageCropMode: global::Umbraco.Web.Models.ImageCropMode.Max, upScale: currSection.UpscaleImages);
+
+                        SrcSetManager ssm = new SrcSetManager(mediaItem, "imageGallery");
+                        SrcSetManager ssmZoom = new SrcSetManager(mediaItem, "imageGalleryZoom");
+
+
+                        <div class="nf-item @spacingClass">
+                            <div class="item-box">
+                                <a class="cbox-gallary1"
+                                   href="@imageFull"
+                                   data-fancybox="gallery_@currSection.Key.ToString()"
+                                   data-srcset="@ssmZoom.GetSrcSet()">
+                                    
+                                    @ssm.CreatePictureElement()
+
+                                    <div class="item-mask">
+                                        <div class="item-caption">
+                                            <br/>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        @* End Gallery *@
+    </div>
+</section>

@@ -1,0 +1,28 @@
+﻿@using Site.Core.ViewModels;
+@using Site.Core;
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<PageProductsList>
+
+<div class="row ">
+    <div class="col-md-12">
+        <div class="shop-filter mb-15">
+
+            @Html.Action(MVC.ProductsList.ActionNames.GetCounter, MVC.ProductsList.Name, new { model = Model })
+
+            <div class="float-left float-none-xs">
+                <form>
+                    <label>@Umbraco.GetDictionaryValue("Products.ProductListSortingLabel")</label>
+                    <select id="listSorting" class="input-md round">
+                        <option value="latest" selected>@Umbraco.GetDictionaryValue("Products.ProductListSorting1")</option>
+                        <option value="name">@Umbraco.GetDictionaryValue("Products.ProductListSorting2")</option>
+                        @if (!Model.HidePrices)
+                        {
+                            <option value="priceasc">@Umbraco.GetDictionaryValue("Products.ProductListSorting3")</option>
+                            <option value="pricedesc">@Umbraco.GetDictionaryValue("Products.ProductListSorting4")</option>
+                        }
+                    </select>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

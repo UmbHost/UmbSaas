@@ -1,0 +1,47 @@
+﻿@using Site.Core
+@using DotSee.Common
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<PagePortfolioItem>
+@{ 
+    if (!Model.MustShowRelated()) { return; }
+    var portfolioRoot = Model.AncestorOrSelf<PagePortfolio>();
+}
+<section class="ptb ptb-sm-60">
+    <div class="container text-center">
+        @if (!string.IsNullOrEmpty(portfolioRoot.RelatedTitle) && string.IsNullOrEmpty(Model.RelatedTitle))
+        {
+            <h4>@portfolioRoot.RelatedTitle</h4>
+        }
+        else if (!string.IsNullOrEmpty(Model.RelatedTitle))
+        {
+            <h4>@Model.RelatedTitle</h4>
+        }
+        <div class="row">
+            @foreach (PagePortfolioItem item in Model.GetRelatedItems())
+            {
+                //TODO: Ensure placeholder image if null (don't continue)
+                IPublishedContent image = item.GetPortfolioListImage();
+                if (image == null) { continue; }
+                string imageThumb = image.GetCropUrl(height: 614, width: 920, upScale: true);
+
+                //Get the category names as a comma delimited list for display
+                string categoryNames = item.GetPortfolioCategoryNames();
+
+                <div class="col-lg-4 spacing-grid">
+                    <div class="item-box">
+                        <a href="@item.Url">
+                            <img alt="1" src="@imageThumb" class="item-container">
+                            <div class="item-mask">
+                                <div class="item-caption">
+                                    <h5 class="white">@item.GetPageTitleForMenu()</h5>
+                                    <p class="white">@categoryNames</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+

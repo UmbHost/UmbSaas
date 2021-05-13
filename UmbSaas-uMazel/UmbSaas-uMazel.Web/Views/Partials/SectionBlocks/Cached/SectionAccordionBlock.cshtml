@@ -1,0 +1,56 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<Umbraco.Core.Models.Blocks.BlockListItem>
+
+@using Site.Core;
+@using DotSee.Common;
+
+@{
+    SectionAccordionBlock currSection = Model.Content as SectionAccordionBlock;
+    SectionAccordionBlockSettings settings = Model.Settings as SectionAccordionBlockSettings;
+
+    bool isPartOfMultiCol = (ViewData["isMultiCol"] ?? "0").ToString() == "1";
+    string cssClass = (isPartOfMultiCol) ? "col-md-12" : "col-md-8 col-md-offset-2";
+
+    string cssSectionClass = Utils.ConcatCssClasses(new string[] {
+          settings.GetSectionEffectCssClass()
+        , settings.GetSectionPtb()
+        , settings.GetSectionMtb()
+             });
+}
+
+@if (!isPartOfMultiCol)
+{
+    <section id="section_@currSection.Key.ToString()" class="@cssSectionClass">
+        <div class="container">
+            @content(currSection, cssClass)
+        </div>
+    </section>
+}
+else
+{
+    @content(currSection, cssClass)
+}
+
+
+@helper content(SectionAccordionBlock currSection, string cssClass)
+{
+    string accordionCss = "acc-" + currSection.Key.ToString();
+
+    <div class="row">
+        @Html.Partial(MVC.Shared.Views.Molecules._SectionBlockTitle, Model)
+        <div class="@cssClass">
+            <div class="accordion @accordionCss">
+                @foreach (BlockAccordionItem item in currSection.Items.Select(x => x.Content))
+                {
+                    <div class="accordion-section @accordionCss">
+                        <h6 class="accordion-title @accordionCss">@item.Title</h6>
+                        <div class="accordion-content @accordionCss">
+                            @Html.Raw(item.Content)
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+}
+
+

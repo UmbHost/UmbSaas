@@ -1,0 +1,77 @@
+﻿@using DotSee.SiteBlog;
+@using DotSee.Common;
+@using Umbraco.Web.PublishedModels;
+@using DotSee.ResponsiveImages;
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<PageArticleItem>
+@{
+    PageArticleItem blogArticle = Model;
+    PageBlogList blogRoot = Model.AncestorOrSelf<PageBlogList>();
+
+    IPublishedContent image = blogArticle.GetPostListImage();
+    SrcSetManager ssm = (image!=null) 
+        ? new SrcSetManager(image, ViewData["imagesConfig"].ToString()) 
+        : null;
+
+    DateTime blogArticleDate = blogArticle.GetPostDateForSorting();
+    string itemsPerRow = ViewData["itemsPerRow"].ToString();
+    string sidebar = ViewData["sidebar"]?.ToString() ?? "0";
+    string itemCss = "";
+    string postCss = "";
+    switch (itemsPerRow)
+    {
+        case "1":
+            itemCss = (sidebar=="1") ? "col-md-12 blog-post-hr" : "col-md-8 col-md-offset-2 blog-post-hr";
+            postCss = "blog-post mb-30";
+            break;
+        case "2":
+            itemCss = "col-md-6 col-sm-6 col-xs-12 nf-item spacing-grid";
+            postCss = "blog-post";
+            break;
+        case "3":
+            itemCss = "col-md-4 col-sm-6 col-xs-12 nf-item spacing-grid";
+            postCss = "blog-post";
+            break;
+        default:
+            itemCss = "col-md-12 blog-post-hr";
+            postCss = "blog-post mb-30";
+            break;
+    }
+
+    }
+    <div class="@itemCss">
+        <div class="@postCss">
+
+            <div class="post-media">
+                <a href="@blogArticle.Url()">
+                    @(ssm?.CreatePictureElement(blogArticle.GetPageTitleForMenu()))
+                </a>
+            </div>
+
+            <div class="post-meta">
+                @if (!blogRoot.HideAuthors)
+                {
+                @Html.Partial(MVC.Partials.Views.Blog._BlogAuthorLink, blogArticle)
+                }
+
+                @if (!blogRoot.HideDates)
+                {
+                <span>@blogArticle.GetPostDate()</span>
+                }
+            </div>
+
+            <div class="post-header">
+                <h4><a href="@blogArticle.Url">@blogArticle.GetPageTitleForMenu()</a></h4>
+            </div>
+            @Html.Partial(MVC.Partials.Views.Blog._BlogSummary, blogArticle)
+            @if (!blogRoot.HideTags)
+            {
+            @Html.Partial(MVC.Partials.Views.Blog._BlogTags, blogArticle)
+            }
+
+            @Html.Partial(MVC.Partials.Views.Blog._BlogReadMoreButton, blogArticle)
+        </div>
+    </div>
+    
+
+

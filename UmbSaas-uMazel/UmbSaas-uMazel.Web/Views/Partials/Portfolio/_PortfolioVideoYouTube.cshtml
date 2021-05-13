@@ -1,0 +1,12 @@
+﻿@using DotSee.Common
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<PagePortfolioItem>
+
+@{ 
+    string videoId = Model.VideoUrl.Split('/').Last().Replace("watch?v=", "");
+}
+<div class="row">
+    <div class="col-md-12 post-media">
+        <iframe width="" height="" src="https://www.youtube.com/embed/@videoId" frameborder="0" allowfullscreen></iframe>
+    </div>
+</div>

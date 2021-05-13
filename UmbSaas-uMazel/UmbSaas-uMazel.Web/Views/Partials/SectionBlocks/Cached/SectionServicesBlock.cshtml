@@ -1,0 +1,132 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<Umbraco.Core.Models.Blocks.BlockListItem>
+
+@using Site.Core;
+@using DotSee.Common;
+@using DotSee.Common.Link;
+@using DotSee.Common;
+
+@{
+
+    SectionServicesBlock currSection = Model.Content as SectionServicesBlock;
+    SectionServicesBlockSettings settings = Model.Settings as SectionServicesBlockSettings;
+
+
+    int maxlength = 0;
+    int counter = 0;
+    string filler = "";
+    int imageSize = (int)currSection.ImageSize;
+    int itemsPerRow = (int)currSection.NumberOfColumns;
+    string cssCols = "";
+    string serviceItemCssClass = "";
+    switch (itemsPerRow)
+    {
+        case 2:
+            cssCols = "col-md-6";
+            serviceItemCssClass = "serviceitem2col";
+            break;
+        case 3:
+            cssCols = "col-md-4";
+            serviceItemCssClass = "serviceitem3col";
+            break;
+        case 4:
+            cssCols = "col-md-3";
+            serviceItemCssClass = "serviceitem4col";
+            break;
+        default:
+            itemsPerRow = 3;
+            cssCols = "col-md-4";
+            serviceItemCssClass = "serviceitem3col";
+            break;
+    }
+
+    string cssSectionClass = Utils.ConcatCssClasses(new string[] {
+          settings.GetSectionEffectCssClass()
+        , settings.GetSectionPtb()
+        , settings.GetSectionMtb()
+             });
+
+    string itemClasses = Utils.ConcatCssClasses(new string[]
+{
+        settings.GetSectionEffectCssClass()
+        , "container"
+        ,"text-" + (string.IsNullOrEmpty(currSection.TextOrientation) ? "center" : currSection.TextOrientation.ToLower())
+                                                                                          });
+}
+<section id="section_@currSection.Key.ToString()" class="services @cssSectionClass">
+    <div class="@itemClasses">
+
+        @Html.Partial(MVC.Shared.Views.Molecules._SectionBlockTitle, Model)
+
+        <div class="row col-lg-12 col-md-12">
+            @foreach (BlockServiceItem item in currSection.Items.Select(x=>x.Content))
+            {
+                counter++;
+                //Get the maximum length of the 3 elements. We will add some nbsp's to the third element
+                //in order to fix any alignment issues.
+                //maxlength = (maxlength < item.Description.Length) ? item.Description.Length : maxlength;
+
+                //if ((counter % itemsPerRow) == 0)
+                //{
+                //    System.Text.StringBuilder sb = new System.Text.StringBuilder(string.Empty);
+                //    for (int cnt = 1; cnt <= (maxlength - item.Description.Length); cnt++)
+                //    {
+                //        sb.Append(" ");
+                //    }
+                //    filler = sb.ToString();
+                //    maxlength = 0;
+                //}
+                //else
+                //{
+                //    filler = "";
+                //}
+
+                bool hasLink = (item.Link != null && item.Link.Count() != 0);
+                string icon = (item.Icon == null) ? "" : item.Icon.ToString();
+
+                bool hasIcon = (item.Icon != null || item.CustomIcon != null);
+
+                <div class="@cssCols mb-45 @serviceItemCssClass">
+                    @if (!hasLink)
+                    {
+                        if (hasIcon)
+                        {
+                            <div class="page-icon-top">
+                                @if (item.CustomIcon != null)
+                                {
+                                    <img src="@item.CustomIcon.GetCropUrl(width: imageSize, height: imageSize, upScale:false)" />
+                                }
+                                else
+                                {
+                                    <i class="@icon"></i>
+                                }
+                            </div>
+                        }
+                        <h5>@item.Title</h5>
+                        <p>@item.Description</p>
+                    }
+                    else
+                    {
+                        if (hasIcon)
+                        {
+                            <div class="page-icon-top">
+                                @if (item.CustomIcon != null)
+                                {
+                                    LinkItem link = item.Link.First().Content.GetLink();
+                                    <a href="@link.Url" target="@link.Target"><img src="@item.CustomIcon.GetCropUrl(width: imageSize, height: imageSize, upScale:false)" /></a>
+                                }
+                                else
+                                {
+                                    @Link.GetLinkMarkup(item.Link.First().Content, new HtmlString(string.Format("<i class=\"{0}\"></i>", icon)))
+                                }
+                            </div>
+                        }
+                        <h5>
+                            @Link.GetLinkMarkup(item.Link.First().Content, new HtmlString(item.Title))
+                        </h5>
+                        <p>@item.Description @Html.Raw(filler)</p>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</section>

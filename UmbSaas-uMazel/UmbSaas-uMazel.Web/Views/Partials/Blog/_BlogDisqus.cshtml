@@ -1,0 +1,40 @@
+﻿@using Umbraco.Web.PublishedModels;
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage<PageArticleItem>
+@{
+    if (string.IsNullOrEmpty(Model.Ancestor<PageBlogList>().DisqusShortName)) { return; }
+
+    PageArticleItem currPage = Model;
+    PageBlogList blogRoot = currPage.Ancestor<PageBlogList>();
+
+    if (!blogRoot.EnableComments)
+    {
+        return;
+    }
+
+    string disqusShortName = blogRoot.DisqusShortName;
+
+    string disqusUrl = string.Format("{0}.disqus.com", disqusShortName);
+    
+    <div class="clearfix"></div>
+
+    <div id="disqus_thread"></div>
+    <script>
+
+                    var disqus_config = function () {
+                        this.page.url = "@currPage.Url(mode: UrlMode.Absolute)";
+                        this.page.identifier = "@currPage.Id.ToString()";
+                    };
+
+                    (function () { // DON'T EDIT BELOW THIS LINE
+                        var d = document, s = d.createElement('script');
+
+                        s.src = '//@disqusUrl/embed.js';
+
+                        s.setAttribute('data-timestamp', +new Date());
+                        (d.head || d.body).appendChild(s);
+                    })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
+}

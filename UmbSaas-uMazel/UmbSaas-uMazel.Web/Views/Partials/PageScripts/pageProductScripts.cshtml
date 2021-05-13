@@ -1,0 +1,48 @@
+﻿@inherits  Umbraco.Web.Mvc.UmbracoViewPage<PageProduct>
+
+@{
+    PageProduct currPage = Model;
+}
+
+<script type="text/javascript">
+$(document).ready(function () {
+
+    // Gallery Slider
+    var galleryThumbs = new Swiper(".gallery-thumbs", {
+        spaceBetween: 10,
+        slidesPerView: 4,
+        freeMode: true,
+        watchSlidesVisibility: true,
+        watchSlidesProgress: true,
+    });
+
+    var galleryHeader = new Swiper(".gallery-top", {
+        spaceBetween: 10,
+        //navigation: {
+        //    nextEl: '.swiper-button-next',
+        //    prevEl: '.swiper-button-prev',
+        //},
+        thumbs: {
+            swiper: galleryThumbs
+        }
+    });
+
+    // Tabs Content
+    $(".tabs").tabs();
+
+    // Related Products
+    $('.item4-carousel').owlCarousel({
+        autoPlay: 5000,
+        stopOnHover: true,
+        items: 4,
+        itemsDesktop: [1170, 3],
+        itemsDesktopSmall: [1024, 2],
+        itemsTabletSmall: [768, 1],
+        itemsMobile: [480, 1],
+        pagination: false,  // Hide pagination buttons
+        navigation: true,  // Show next and prev buttons
+        navigationText: ["<i class='fa fa-angle-left'></i>", "<i class='fa fa-angle-right'></i>"]
+    });
+
+});
+</script>

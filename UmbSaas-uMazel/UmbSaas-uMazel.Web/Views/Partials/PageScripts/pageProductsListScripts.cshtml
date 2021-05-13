@@ -1,0 +1,30 @@
+﻿@inherits  Umbraco.Web.Mvc.UmbracoViewPage<PageProductsList>
+
+@{
+    PageProductsList currPage = Model;
+
+    var currentPageUrl = Model.Url(mode: UrlMode.Default);
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#listSorting").on("change", function () {
+            var url = "@currentPageUrl" + "?page=1&sort=" + $(this).val();
+            if (url) {
+                window.location = url;
+            }
+            return false;
+        });
+
+        var queryString = new URLSearchParams(location.search);
+        var sortValue = queryString.get("sort");
+
+        $("#listSorting > option").each(function () {
+            if (this.value == sortValue) {
+                this.selected = "selected";
+            }
+        });
+
+        //console.log(sortValue);
+    });
+</script>

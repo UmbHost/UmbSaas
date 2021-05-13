@@ -1,0 +1,27 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<BlockFeatureItem>
+@{
+
+
+    string position = ViewData["position"].ToString();
+
+    bool hasIcon = (Model.CustomIcon != null || Model.Icon != null);
+}
+
+@if (hasIcon)
+{
+    <div class="features-icon-@position">
+        @if (Model.CustomIcon != null)
+        {
+            var customIcon = Model.CustomIcon.GetCropUrl(width: 50);
+            <img src="@customIcon" />
+        }
+        else
+        {
+            string icon = Model.Icon.ToString();
+            <i class="@icon"></i>
+        }
+    </div>
+}
+
+<h5>@Model.Title</h5>
+<p>@Html.Raw(Model.Summary)</p>

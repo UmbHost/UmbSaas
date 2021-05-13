@@ -1,0 +1,31 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<DotSee.SiteBlog.BlogRssViewModel>
+
+@{
+    if (Model.Items == null || Model.Items.Count() == 0) { return; }
+    Response.ContentType = "text/xml";
+}
+<channel>
+    <title>@Model.BlogName</title>
+    @Html.Raw(String.Concat("<link>", Model.BlogUrl, "</link>"))
+    <pubDate>@Model.PubDate</pubDate>
+    <description>@Model.Description</description>
+    <language>@System.Threading.Thread.CurrentThread.CurrentUICulture.Name</language>
+
+    @foreach (var item in Model.Items)
+    {
+        @RenderItem(item)
+    }
+
+</channel>
+
+@helper RenderItem(DotSee.SiteBlog.BlogRssItemViewModel item)
+{
+<item>
+    <title>@item.Title</title>
+    <author>@item.Author</author>
+    @Html.Raw(string.Concat("<link>", item.Link, "</link>"))
+    <pubDate>@item.PubDate</pubDate>
+    <guid>@item.Link</guid>
+    <description>@item.Description</description>
+</item>
+}

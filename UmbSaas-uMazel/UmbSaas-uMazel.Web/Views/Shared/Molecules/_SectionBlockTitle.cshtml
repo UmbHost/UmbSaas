@@ -1,0 +1,78 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<Umbraco.Core.Models.Blocks.BlockListItem>
+
+@{
+    var currSection = Model.Content as IAbstractSectionBlock;
+    var settings = Model.Settings as IAbstractSectionTitleBlock;
+
+    if (settings.HideTitle) { return; }
+
+    int titleSpacing = 0;
+    if (settings.TitleSpacing != null && settings.TitleSpacing != "")
+    {
+        titleSpacing = int.Parse(settings.TitleSpacing);
+    }
+    else
+    {
+        switch (Model.Content.ContentType.Alias)
+        {
+            case SectionAccordionBlock.ModelTypeAlias:
+            case SectionActionBoxBlock.ModelTypeAlias:
+            case SectionPercentagesBlock.ModelTypeAlias:
+                titleSpacing = 30;
+                break;
+            case SectionFeaturesBlock.ModelTypeAlias:
+                titleSpacing = 0;
+                break;
+            default:
+                titleSpacing = 30;
+                break;
+        }
+    }
+
+    string titleMarkup = "";
+    switch (settings.TitleSize)
+    {
+        case "Normal":
+            titleMarkup = string.Format("<h3>{0}</h3>", currSection.SectionTitle);
+            break;
+        case "Small":
+            titleMarkup = string.Format("<h4>{0}</h4>", currSection.SectionTitle);
+            break;
+        case "Extra Small":
+            titleMarkup = string.Format("<h5>{0}</h5>", currSection.SectionTitle);
+            break;
+        case "Tiny":
+            titleMarkup = string.Format("<h6>{0}</h6>", currSection.SectionTitle);
+            break;
+        default:
+            titleMarkup = string.Format("<h3>{0}</h3>", currSection.SectionTitle);
+            break;
+    }
+
+    string titleOrientation = "text-center";
+    switch (settings.TitleOrientation)
+    {
+        case "Left":
+            titleOrientation = "text-left";
+            break;
+        case "Right":
+            titleOrientation = "text-right";
+            break;
+        case "Center":
+            titleOrientation = "text-center";
+            break;
+        default:
+            titleOrientation = "text-center";
+            break;
+
+    }
+}
+
+@if (!string.IsNullOrEmpty(currSection.SectionTitle))
+{
+    <div class="@titleOrientation">
+        @Html.Raw(titleMarkup)
+    </div>
+
+    <div class="spacer-@titleSpacing"></div>
+}

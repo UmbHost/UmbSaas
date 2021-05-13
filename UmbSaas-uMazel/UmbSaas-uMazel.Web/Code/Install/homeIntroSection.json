@@ -1,0 +1,37 @@
+{
+  "layout": {
+    "Umbraco.BlockList": [
+      {
+        "contentUdi": "umb://element/3e1667a762034c499829cce4fdf2a062",
+        "settingsUdi": "umb://element/f3bcc778fe8145dc90aca251eae6757a"
+      }
+    ]
+  },
+  "contentData": [
+    {
+      "contentTypeKey": "00735116-3206-414e-9d3c-c625a3789646",
+      "udi": "umb://element/3e1667a762034c499829cce4fdf2a062",
+      "disabled": 0,
+      "sectionTitle": "Welcome to the uMazel Starter Kit for Umbraco 8",
+      "lightTopMenu": 1,
+      "subtitle": "",
+      "summary": "Scroll down to see the list of improvements and new features.",
+      "linkButtons": null,
+      "image": "umb://media/9625af6671cf43f1bdbc4697eea75cb5",
+      "useLightTextColor": 1,
+      "overlay": "0",
+      "fadeText": 0,
+      "keepTextVisible": 0,
+      "parallax": 0
+    }
+  ],
+  "settingsData": [
+    {
+      "contentTypeKey": "8bb3ad0e-a4b0-43a7-baa8-6ca1fe5ae6e3",
+      "udi": "umb://element/f3bcc778fe8145dc90aca251eae6757a",
+      "buttonSize": "1",
+      "buttonFill": [],
+      "buttonOutline": "0"
+    }
+  ]
+}

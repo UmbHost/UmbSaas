@@ -1,0 +1,145 @@
+﻿@using ClientDependency.Core.Mvc;
+@using Site.Core;
+@using DotSee.Common;
+
+@inherits Umbraco.Web.Mvc.UmbracoViewPage
+@{
+    Layout = null;
+
+    IPublishedContent currPage = Model;
+    PageHome homePage = CachedNodes.GetHomePage();
+    ConfigGlobalSettings configPage = CachedNodes.GetConfigNode();
+    ConfigScriptSettings scriptSettings = CachedNodes.GetScriptsNode();
+
+    Html.RequiresCss("/Css/bootstrap.css", CdfPriority.First, CdfGroup.Essentials);
+    Html.RequiresCss("/Css/font-awesome.css", CdfPriority.First, CdfGroup.Essentials);
+    Html.RequiresCss("/Css/ionicons.css", CdfPriority.First, CdfGroup.Essentials);
+    Html.RequiresCss("/Css/plugin/jPushMenu.css", CdfPriority.First, CdfGroup.Essentials);
+    Html.RequiresCss("/Css/plugin/animate.css", CdfPriority.First, CdfGroup.Essentials);
+    Html.RequiresCss("/Css/jquery-ui.css", CdfPriority.First, CdfGroup.Essentials);
+    Html.RequiresCss("/scripts/cookiebar/jquery.cookiebar.css", CdfPriority.First, CdfGroup.Essentials);
+    Html.RequiresCss("/Css/plugin/mediaelementplayer.css", CdfPriority.First, CdfGroup.Essentials);
+
+    @*
+        This loads the custom font (if any).
+        MUST be last in CSS statements, because if it's a custom font it doesn't go through CDF as a static resource but we still need it loaded last.
+    *@
+
+    @Html.Partial(MVC.Shared.Views.Common._PageFont, currPage)
+
+    Html.RequiresJs("/scripts/jquery-1.11.2.min.js", CdfPriority.First, CdfGroup.Essentials);
+    Html.RequiresJs("/scripts/plugin/jquery.easing.js", CdfPriority.First, CdfGroup.Essentials);
+    Html.RequiresJs("/scripts/jquery-ui.min.js", CdfPriority.First, CdfGroup.Essentials);
+    Html.RequiresJs("/scripts/bootstrap.min.js", CdfPriority.First, CdfGroup.Essentials);
+    Html.RequiresJs("/scripts/plugin/jquery.viewportchecker.js", CdfPriority.Medium, CdfGroup.Essentials);
+    Html.RequiresJs("/scripts/plugin/wow.min.js", CdfPriority.Medium, CdfGroup.Essentials);
+    Html.RequiresJs("/scripts/plugin/jquery.fitvids.js", CdfPriority.Medium, CdfGroup.Essentials);
+    Html.RequiresJs("/scripts/plugin/mediaelement-and-player.min.js", CdfPriority.Medium, CdfGroup.Essentials);
+    Html.RequiresJs("/scripts/plugin/jPushMenu.js", CdfPriority.Medium, CdfGroup.Essentials);
+    Html.RequiresJs("/scripts/lazysizes.js", CdfPriority.Medium, CdfGroup.Essentials);
+    Html.RequiresJs("/scripts/ls.blur-up.min.js", CdfPriority.Medium, CdfGroup.Essentials);
+
+    Html.RequiresJs("/scripts/theme.js", CdfPriority.Last, CdfGroup.Essentials);
+    Html.RequiresJs("/scripts/navigation.js", CdfPriority.Last, CdfGroup.Essentials);
+
+    Html.RequiresJs("/scripts/cookie-dialog.js", CdfPriority.Last, CdfGroup.Essentials);
+
+    string currCultureName = System.Threading.Thread.CurrentThread.CurrentUICulture.Name;
+    string currCultureNativeName = System.Threading.Thread.CurrentThread.CurrentUICulture.NativeName.ToString();
+
+    string contextualKeyForCaching = currPage.Id.ToString() + currCultureNativeName;
+
+    var pageHeaderUtils = new PageHeaderUtils(currPage);
+
+    string bodyCss = (pageHeaderUtils.UseLightMenu)
+        ? "full-intro background--dark"
+        : "full-intro background--light";
+
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta charset="utf-8" />
+
+    @Html.Action(MVC.PageMetas.ActionNames.Index, MVC.PageMetas.Name, new { pageId = currPage.Id, culture = currCultureName })
+
+    @if (currPage is PageBlogList)
+        {
+            @Html.Action(MVC.BlogRss.ActionNames.AutoDiscovery, MVC.BlogRss.Name
+                , new
+                     {
+                        model = currPage as PageBlogList
+                        ,
+                         catid = Request.QueryString["c"]
+                        ,
+                         tag = Request.QueryString["t"]
+                        ,
+                         culture = currCultureName
+                })
+        }
+    
+
+    @if (configPage.GenerateLanguageMetaTagAutomatically)
+    {
+        @Html.Action(MVC.Hreflang.ActionNames.Index, MVC.Hreflang.Name, new { pageId = currPage.Id, culture = currCultureName })
+    }
+    @Html.CachedPartial(MVC.Shared.Views.Common._PageIcons, Model, 3600, false, false, contextualKeyBuilder: (m, viewData) => contextualKeyForCaching)
+
+    @Html.RenderCssHere()
+
+    @RenderScript(currPage, "scriptinhead", scriptSettings.ScriptInHeadElement)
+    @RenderPageSpecificScript(currPage, ((IAbstractPage)currPage).CodeInHeadElement)
+</head>
+
+<body class="@bodyCss">
+
+    @RenderScript(currPage, "scriptafterbodystart", scriptSettings.ScriptAfterBodyStart)
+    @RenderPageSpecificScript(currPage, ((IAbstractPage)currPage).CodeAfterBodyStart)
+
+    @Html.Partial(MVC.Shared.Views.Common._SiteLoader, Model)
+
+    <div class="search-overlay-menu">
+        <span class="search-overlay-close"><i class="ion ion-ios-close-empty"></i></span>
+        <form role="search" id="searchform" action="@(CachedNodes.GetSearchNode()?.Url)" method="get">
+            <input value="" name="q" type="search" placeholder="@Umbraco.GetDictionaryValue("Misc.Search")" />
+            <button type="submit"><i class="ion ion-ios-search"></i></button>
+        </form>
+    </div>
+
+    <div class="wrapper">
+        <header class="header">
+            <div class="container">
+                @Html.CachedPartial(MVC.Shared.Views.Common._PageLogo, Model, 3600, true)
+                @Html.Action(MVC.MainMenu.ActionNames.Index, MVC.MainMenu.Name, new { pageId = currPage.Id, culture = currCultureName })
+            </div>
+        </header>
+
+        @RenderBody()
+
+        @Html.Partial(MVC.Shared.Views.Common._PageFooter, Model)
+        <a class="scroll-top">
+            <i class="fa fa-angle-double-up"></i>
+        </a>
+    </div>
+
+    @Html.RenderJsHere()
+    @Html.Partial(MVC.Shared.Views.Common._PageSectionScriptsRenderer, currPage)
+    @Html.Partial(MVC.Shared.Views.Common._PageExplicitScriptsRenderer, currPage)
+    @RenderScript(currPage, "scriptbeforebodyend", scriptSettings.ScriptBeforeBodyEnd)
+    @RenderPageSpecificScript(currPage, ((IAbstractPage)currPage).CodeBeforeBodyEnd)
+</body>
+</html>
+
+@helper RenderPageSpecificScript(IPublishedContent currPage, string code)
+{
+    if (!currPage.IsComposedOf(AbstractPage.ModelTypeAlias)) { return; }
+    @Html.Raw(code)
+}
+
+@helper RenderScript(IPublishedContent currPage, string propName, IEnumerable<NcScriptItem> scripts)
+{
+    if (scripts == null || scripts.Count() == 0) { return; }
+
+    @Html.Partial(MVC.Shared.Views.Common._Scripts, scripts, viewData: new ViewDataDictionary { { "currPageId", currPage.Id } })
+}

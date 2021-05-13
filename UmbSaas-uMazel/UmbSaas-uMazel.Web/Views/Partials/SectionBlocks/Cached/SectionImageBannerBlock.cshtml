@@ -1,0 +1,38 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<Umbraco.Core.Models.Blocks.BlockListItem>
+@using Site.Core;
+@using DotSee.Common;
+@using DotSee.Common.Link;
+@using DotSee.ResponsiveImages;
+
+@{
+    SectionImageBannerBlock currSection = Model.Content as SectionImageBannerBlock;
+    SectionImageBannerBlockSettings settings = Model.Settings as SectionImageBannerBlockSettings;
+
+    SrcSetManager ssm = new SrcSetManager(currSection.Image, "sectionImageBanner");
+
+    string cssClass = Utils.ConcatCssClasses(
+        new string[] {
+        settings.GetSectionPtb()
+        , settings.GetSectionMtb()
+    });
+}
+
+<section id="section_@currSection.Key.ToString()" class="imageBanner @cssClass">
+
+    <div class="container">
+        <div class="row">
+            @Html.Partial(MVC.Shared.Views.Molecules._SectionBlockTitle, Model)
+            <div class="col-xs-12 text-center">
+                @if (currSection.Link != null && currSection.Link.Any())
+                {
+                    LinkItem link = currSection.Link.First().Content.GetLink();
+                    <a href="@link.Url" target="@link.Target" title="@link.Caption">@ssm.CreatePictureElement(imageAlt: currSection.SectionTitle)</a>
+                }
+                else
+                {
+                    @ssm.CreatePictureElement(imageAlt: currSection.SectionTitle)
+                }
+            </div>
+        </div>
+    </div>
+</section>

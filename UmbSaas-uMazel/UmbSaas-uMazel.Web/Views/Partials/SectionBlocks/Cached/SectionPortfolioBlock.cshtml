@@ -1,0 +1,41 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<SectionPortfolioBlock>
+
+@using Site.Core;
+@using DotSee.Common;
+
+@{
+    SectionPortfolioBlock currSection = Model;
+
+    string containerTypeClass = (Model.Masonry) ? "masonry" : "grid";
+    string containerClass = (currSection.Wide) ? "container-fluid" : "container";
+
+    int cropwidth = (currSection.Wide)
+        ? (currSection.Spacing) ? 877 : 952
+        : (currSection.Spacing) ? 650 : 600;
+
+    string itemClass = (currSection.Spacing) ? "container-" + containerTypeClass + " nf-col-" + currSection.Columns : "row container-" + containerTypeClass + " nf-col-" + currSection.Columns;
+
+    string cssClass = Utils.ConcatCssClasses(
+        new string[] {
+          currSection.GetSectionEffectCssClass()
+        , currSection.GetSectionPtb()
+        , currSection.GetSectionMtb()
+        , "text-center"
+    });
+}
+
+<section id="section_@currSection.Key.ToString()" class="@cssClass">
+    <div class="@containerClass">
+
+        @Html.Partial(MVC.Shared.Views.Molecules._SectionTitle, currSection)
+
+        @Html.Action(MVC.Portfolio.ActionNames.GetPortfolioCategories, MVC.Portfolio.Name, new { portfolioId = currSection.Id })
+
+        <div class="@itemClass">
+
+            @Html.Action(MVC.Portfolio.ActionNames.GetPortfolioListItems, MVC.Portfolio.Name, new { portfolioId = currSection.Id })
+        </div>
+    </div>
+</section>
+
+

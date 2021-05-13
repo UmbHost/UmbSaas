@@ -1,0 +1,25 @@
+﻿@using DotSee.Common;
+@using Site.Core.ViewModels;
+@using Umbraco.Core.Composing;
+@using ClientDependency.Core.Mvc;
+
+@inherits  UmbracoViewPage<SearchResultsViewModel>
+
+@foreach (SearchItemViewModel item in Model.Items)
+{
+    <li><h3><a href="@item.Url" class="name">@item.Name</a></h3></li>
+}
+
+@{
+    bool noMoreData = Model.IsLastPage || Model.TotalPages == 0;
+}
+@if (noMoreData && UmbracoContext != null && UmbracoContext.IsFrontEndUmbracoRequest)
+{
+    Html.RequiresJs("/scripts/disablemorebutton.js", 999999);
+}
+else if (noMoreData)
+{
+    <script type="text/javascript">
+        $('.more-btn').hide();
+    </script>
+}

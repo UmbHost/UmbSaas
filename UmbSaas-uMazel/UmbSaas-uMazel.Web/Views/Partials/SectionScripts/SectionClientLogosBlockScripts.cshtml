@@ -1,0 +1,28 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<Umbraco.Core.Models.Blocks.BlockListItem>
+
+@{
+    SectionClientLogosBlock currSection = Model.Content as SectionClientLogosBlock;
+    SectionClientLogosBlockSettings settings  = Model.Settings as SectionClientLogosBlockSettings;
+
+    int count = currSection.Items.Count;
+}
+
+    <script type="text/javascript">
+$(document).ready(function () {
+    $('#section_' + '@currSection.Key.ToString()' + ' .client-carousel').owlCarousel({
+        autoPlay: @((!settings.ManualPlay).ToString().ToLower()),
+        autoHeight: @settings.AutoHeight.ToString().ToLower(),
+        stopOnHover: @settings.StopOnHover.ToString().ToLower(),
+        slideSpeed: (@settings.SlideSpeed==0 ? 400 : @settings.SlideSpeed),
+        items: @(count < 5 ? count : 5),
+        itemsDesktop: [1170, @(count < 4 ? count : 4)],
+        itemsDesktopSmall: [1024, @(count < 3 ? count : 3)],
+        itemsTabletSmall: [768, @(count < 2 ? count : 2)],
+        itemsMobile: [480, 1],
+        pagination: @settings.ShowBullets.ToString().ToLower(),  // Show pagination buttons
+        navigation: @settings.ShowNavigationButtons.ToString().ToLower(),  // Hide next and prev buttons
+        navigationText: ["<i class='fa fa-angle-left'></i>", "<i class='fa fa-angle-right'></i>"]
+    });
+});
+    </script>
+

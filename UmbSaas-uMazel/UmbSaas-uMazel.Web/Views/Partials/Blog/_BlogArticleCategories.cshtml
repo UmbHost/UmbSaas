@@ -1,0 +1,19 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<PageArticleItem>
+
+@{
+    bool hasCategories = Model.Categories != null && Model.Categories.Any() ? true : false;
+    if (Model.Ancestor<PageBlogList>().HideCategories) { return; }
+
+    if (hasCategories)
+    {
+        <br/>
+        <div class="post-meta">
+            Categories:
+            @foreach (var category in Model.Categories)
+            {
+                <span><a href="@(Model.Ancestor<PageBlogList>().Url().EnsureEndsWith("/")+ "?c=" + category.Id)">@category.Name</a>&nbsp;</span>
+            }
+
+        </div>
+    }
+}

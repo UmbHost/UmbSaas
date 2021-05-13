@@ -1,0 +1,128 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<Umbraco.Core.Models.Blocks.BlockListItem>
+
+
+@using Site.Core;
+@using DotSee.Common.Link;
+@using DotSee.Common;
+@using DotSee.ResponsiveImages
+
+@{
+    SectionTeamBlock currSection = Model.Content as SectionTeamBlock;
+    SectionTeamBlockSettings settings = Model.Settings as SectionTeamBlockSettings;
+    
+    string cssClass = Utils.ConcatCssClasses(
+        new string[] {
+              settings.GetSectionEffectCssClass()
+            , settings.GetSectionPtb()
+            , settings.GetSectionMtb()
+            });
+}
+
+<section id="section_@currSection.Key.ToString()" class="@cssClass">
+    <div class="container">
+
+        @Html.Partial(MVC.Shared.Views.Molecules._SectionBlockTitle, Model)
+
+        <div class="row">
+            @if (currSection.Appearance == "Slider")
+            {
+                <div class="owl-carousel team-carousel nf-carousel-theme">
+                    @foreach (BlockTeamItem item in currSection.Items.Select(x => x.Content))
+                    {
+                        <div class="item">
+                            <div class="team-item nf-col-padding">
+                                @RenderItem(item)
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else if (currSection.Appearance == "Grid")
+            {
+                foreach (BlockTeamItem item in currSection.Items.Select(x=>x.Content))
+                {
+                    <div class="col-md-3 col-sm-6 mb-30 team-grid-item">
+                        <div class="team-item">
+                            @RenderItem(item)
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</section>
+
+@helper RenderItem(BlockTeamItem item)
+{
+    string image = item.Image.GetCropUrl();
+
+    <div class="team-item-img">
+
+        @{
+            SrcSetManager ssm = new SrcSetManager(item.Image, "sectionTeamThumbs");
+            @ssm.CreatePictureElement()
+        }
+
+        @*<img src="@image" alt="@item.TeamMemberName" />*@
+        <div class="team-item-detail">
+            <div class="team-item-detail-inner light-color">
+                @if (item.Link != null && item.Link.Any())
+                {
+                    @Link.GetLinkMarkup(item.Link.First().Content, new HtmlString(string.Format("<h5>{0}</h5><p>{1}</p>", item.TeamMemberName, item.Summary)))
+
+                }
+                else
+                {
+                    <h5>@item.TeamMemberName</h5>
+                    <p>@item.Summary</p>
+                }
+                <ul class="social">
+                    @SocialLinkList(item.FacebookUrl, "fab fa-facebook")
+                    @SocialLinkList(item.LinkedInUrl, "fab fa-linkedin")
+                    @SocialLinkList(item.PinterestUrl, "fab fa-pinterest")
+                    @SocialLinkList(item.TwitterUrl, "fab fa-twitter")
+                    @SocialLinkList(item.YoutubeUrl, "fab fa-youtube")
+                    @SocialLinkList(item.GooglePlusUrl, "fab fa-google-plus")
+                    @SocialLinkList(item.GitHubUrl, "fab fa-github")
+                    @SocialLinkList(item.TumblrUrl, "fab fa-tumblr")
+                    @SocialLinkList(item.VimeoUrl, "fab fa-vimeo")
+                    @SocialLinkList(item.PersonalPageUrl, "fas fa-external-link-alt")
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="team-item-info">
+        @if (item.Link != null && item.Link.Any())
+        {
+            <h5>
+                @Link.GetLinkMarkup(item.Link.First().Content, new HtmlString(item.TeamMemberName))
+            </h5>
+            <p>
+                @Link.GetLinkMarkup(item.Link.First().Content, new HtmlString(item.Role))
+            </p>
+        }
+        else
+        {
+            <h5>@item.TeamMemberName</h5>
+            <p>@item.Role</p>
+        }
+    </div>
+}
+
+@helper  SocialLinkList(string url, string iconClass)
+{
+    if (!string.IsNullOrEmpty(url))
+    {
+        if (!url.StartsWith("http"))
+        {
+            url = "https://" + url;
+        }
+        @Html.Raw("<li><a href=\"" + url + "\" target=\"_blank\"><i class=\"" + iconClass + " \"></i></a></li>");
+    }
+    else
+    {
+        @Html.Raw("");
+    }
+
+}

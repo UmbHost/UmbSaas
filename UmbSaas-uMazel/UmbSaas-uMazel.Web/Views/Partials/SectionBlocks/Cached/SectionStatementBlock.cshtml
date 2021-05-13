@@ -1,0 +1,82 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<Umbraco.Core.Models.Blocks.BlockListItem>
+
+@using Site.Core;
+@using DotSee.Common.Link;
+@using DotSee.ResponsiveImages;
+@using DotSee.Common;
+@using System.Collections.Specialized;
+
+@{
+
+    SectionStatementBlock currSection = Model.Content as SectionStatementBlock;
+    SectionStatementBlockSettings settings = Model.Settings as SectionStatementBlockSettings;
+
+    bool hasLink = (currSection.Link != null && currSection.Link.Count() != 0);
+
+    string videoId = (hasLink)
+        ? Utils.GetYouTubeIdFromUrl(Link.GetLink(currSection.Link.First().Content).Url)
+        : null;
+
+    string colorCss = (currSection.UseLightTextColor) ? "dark-bg" : "light-bg";
+    string buttonCss = (currSection.UseLightTextColor ? "btn-white" : "btn-black");
+    string sectionClasses = null;
+
+    SrcSetManager ssm = currSection.Image != null ? new SrcSetManager(currSection.Image, "backgroundfull") : null;
+
+    if (currSection.Image != null)
+    {
+        @ssm.GetBreakPointsCss()
+    }
+
+    sectionClasses = Utils.ConcatCssClasses(new string[] {
+              settings.GetSectionEffectCssClass()
+            , SiteUtils.GetOverlayCssClass((int)currSection.Overlay)
+            , colorCss
+            , ssm != null ? ssm.GetClassName() : " "
+            , settings.GetSectionPtb()
+            , settings.GetSectionMtb()
+        });
+
+    string itemClasses = Utils.ConcatCssClasses(new string[]
+    {
+            "container"
+            ,"text-" + (string.IsNullOrEmpty(settings.TextOrientation) ? "center" : settings.TextOrientation.ToLower())
+            });
+}
+
+<section id="section_@currSection.Key.ToString()" class="@sectionClasses">
+    <div class="@itemClasses">
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+
+                @{
+                    string icon = (currSection.Icon != null)
+                        ? string.Format("<div class=\"page-icon-top\"><i class=\"{0}\"></i></div>", currSection.Icon.ToString())
+                        : null;
+                        @Html.Raw(icon)
+                }
+
+                <h4>@currSection.SectionTitle</h4>
+
+                @if (!string.IsNullOrEmpty(currSection.Text))
+                {
+                    <p>@currSection.Text</p>
+                }
+                @if (hasLink)
+                {
+                    if (string.IsNullOrEmpty(videoId))
+                    {
+                        @Link.GetLinkMarkup(currSection.Link.First().Content, attributes: new ListDictionary() { { "class", "btn btn-md " + buttonCss } })
+                    }
+                    else
+                    {
+                        LinkItem link = currSection.Link.First().Content.GetLink();
+                        link.Url = string.Format("https://www.youtube.com/embed/{0}?rel=0&amp;autoplay=1&amp;wmode=transparent", videoId);
+
+                        @link.GetMarkup(attributes: new ListDictionary() { { "class", "cbox-iframe btn btn-md " + buttonCss } })
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,17 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage
+
+@{
+    var controllerContext = Html.ViewContext.Controller.ControllerContext;
+    var layout = ViewEngines.Engines.FindPartialView(controllerContext, "PageScripts/siteTemplateScripts");
+    var result = ViewEngines.Engines.FindPartialView(controllerContext, "PageScripts/" + Model.ContentType.Alias + "Scripts");
+    if (layout != null)
+    {
+        // First render all the generic scripts for the specific layout
+        @Html.Partial("PageScripts/siteTemplateScripts", Model);
+    }
+    if (result.View != null)
+    {
+        // Then the page scripts
+        @Html.Partial("PageScripts/" + Model.ContentType.Alias + "Scripts", Model)
+    }
+}

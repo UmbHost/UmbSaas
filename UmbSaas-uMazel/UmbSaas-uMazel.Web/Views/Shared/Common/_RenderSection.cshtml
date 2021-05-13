@@ -1,0 +1,34 @@
+﻿@inherits  UmbracoViewPage<IPublishedContent>
+
+@{
+    switch (Model.ContentType.Alias)
+    {
+        case SectionPlaceholder.ModelTypeAlias:
+            var elements = ((SectionPlaceholder)Model).ReusableElements;
+            if (elements != null && elements.Any())
+            {
+                foreach (IPublishedContent sectionItem in elements)
+                {
+
+                    @Html.Partial(MVC.Shared.Views.Common._RenderSection, sectionItem)
+                }
+            }
+            break;
+        case SectionImageGallery.ModelTypeAlias:
+            @Html.Partial(MVC.Partials.Views.SectionCdf.SectionImageGalleryCdf)
+            @Html.Action(MVC.SectionImageGallery.ActionNames.Index, MVC.SectionImageGallery.Name, new { sectionId = Model.Id, culture = System.Threading.Thread.CurrentThread.CurrentUICulture.Name })
+            break;
+        default:
+            var controllerContext = Html.ViewContext.Controller.ControllerContext;
+            var result = ViewEngines.Engines.FindPartialView(controllerContext, "SectionCdf/" + Model.ContentType.Alias + "Cdf");
+            if (result.View != null)
+            {
+                @Html.Partial("SectionCdf/" + Model.ContentType.Alias + "Cdf", Model)
+            }
+
+            @*Html.Partial("Sections/" + Model.ContentType.Alias, model)*@
+            @Html.CachedPartial("Sections/" + Model.ContentType.Alias, Model, 600, false, false, null, contextualKeyBuilder: (m, viewData) => Model.Id.ToString() + System.Threading.Thread.CurrentThread.CurrentUICulture.NativeName.ToString())
+            break;
+    }
+
+}

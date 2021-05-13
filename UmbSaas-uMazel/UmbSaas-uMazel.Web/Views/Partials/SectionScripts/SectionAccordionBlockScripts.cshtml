@@ -1,0 +1,19 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<Umbraco.Core.Models.Blocks.BlockListItem>
+
+@{ 
+    SectionAccordionBlock currSection = Model.Content as SectionAccordionBlock;
+    string accordionCss = "acc-" + currSection.Key.ToString();
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $('.accordion-title.@accordionCss').click(function (e) {
+            
+            $(this).next().slideToggle('easeOut');
+            $(this).toggleClass('active');
+            $(".accordion-content.@accordionCss").not($(this).next()).slideUp('easeIn');
+            $(".accordion-title.@accordionCss").not($(this)).removeClass('active');
+        });
+        $(".accordion-content.@accordionCss").addClass("default-hidden");
+    });
+</script>

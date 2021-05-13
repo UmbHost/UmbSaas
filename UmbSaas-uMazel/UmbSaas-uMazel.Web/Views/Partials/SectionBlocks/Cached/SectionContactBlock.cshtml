@@ -1,0 +1,89 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<Umbraco.Core.Models.Blocks.BlockListItem>
+
+@using Site.Core.Models;
+@using Site.Core;
+@using DotSee.Common;
+@using DotSee.Common.Link;
+@using ClientDependency.Core.Mvc;
+
+@{
+    Html.RequiresJs("/scripts/jquery.validate.min.js", CdfGroup.Essentials, CdfPriority.LastOfLast);
+    Html.RequiresJs("/scripts/jquery.validate.unobtrusive.min.js", CdfGroup.Essentials, CdfPriority.LastOfLast);
+    Html.RequiresJs("/scripts/jquery.unobtrusive-ajax.min.js", CdfGroup.Essentials, CdfPriority.LastOfLast);
+    Html.RequiresJs("https://www.google.com/recaptcha/api.js", CdfPriority.LastOfLast, CdfGroup.LoadedLast);
+
+    SectionContactBlock currSection = Model.Content as SectionContactBlock;
+    SectionContactBlockSettings settings = Model.Settings as SectionContactBlockSettings;
+
+    string[] dropDown1Data = currSection.Dropdown1Values.Split(new string[] { "\n", "\n\r" }, StringSplitOptions.RemoveEmptyEntries);
+    string[] dropDown2Data = currSection.Dropdown2Values.Split(new string[] { "\n", "\n\r" }, StringSplitOptions.RemoveEmptyEntries);
+
+    string sectionClasses = Utils.ConcatCssClasses(new string[] {
+            settings.GetSectionEffectCssClass()
+        , settings.GetSectionPtb()
+        , settings.GetSectionMtb()
+    });
+
+    string culture = System.Threading.Thread.CurrentThread.CurrentUICulture.Name;
+
+    string mailTo = currSection.AdministratorsEmail;
+    string mailFrom = currSection.NotificationMailFrom;
+    string mailFromAlias = currSection.NotificationMailSenderAlias;
+    string message = currSection.NotificationEmailBody;
+    string subject = currSection.NotificationEmailSubject;
+
+    string acceptanceLiteral = currSection.AcceptanceLiteral;
+    LinkItem acceptanceLink = new LinkItem();
+
+    if (currSection.AcceptanceLink != null && currSection.AcceptanceLink.Any())
+    {
+        acceptanceLink = currSection.AcceptanceLink.First().Content.GetLink();
+    }
+
+}
+
+<section id="section_@currSection.Key.ToString()" class="@sectionClasses">
+    <div class="container">
+
+        @if (!string.IsNullOrEmpty(currSection.IntroText) || !settings.HideTitle)
+        {
+
+            <div class="row">
+                <div class="col-md-6 col-md-offset-3 text-center">
+
+                    @if (!settings.HideTitle)
+                    {
+                        <h3>@currSection.SectionTitle</h3>
+                    }
+
+                    @if (!string.IsNullOrEmpty(currSection.IntroText))
+                    {
+                        <p class="lead">@currSection.IntroText</p>
+                    }
+
+                </div>
+            </div>
+            <div class="spacer-15"></div>
+        }
+
+        @Html.Action(MVC.ContactSurface.ActionNames.Index, MVC.ContactSurface.Name, new
+           {
+               model = new ContactViewModel()
+               {
+                   HideSubject = currSection.HideSubject,
+                   HideName = currSection.HideName,
+                   MailTo = mailTo,
+                   MailFrom = mailFrom,
+                   MailFromAlias = mailFromAlias,
+                   EmailBody = message,
+                   EmailSubject = subject,
+                   DropDown1Values = dropDown1Data,
+                   DropDown2Values = dropDown2Data,
+                   ReCaptchaSiteKey = currSection.ReCaptchaSiteKey,
+                   AcceptanceLiteral = acceptanceLiteral,
+                   AcceptanceLink = acceptanceLink
+               },
+               culture = culture
+           })
+    </div>
+</section>

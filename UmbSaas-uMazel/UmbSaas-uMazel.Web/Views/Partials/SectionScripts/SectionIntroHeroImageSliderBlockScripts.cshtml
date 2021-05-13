@@ -1,0 +1,63 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<Umbraco.Core.Models.Blocks.BlockListItem>
+
+@{
+    SectionIntroHeroImageSliderBlockSettings settings = Model.Settings as SectionIntroHeroImageSliderBlockSettings;
+    string animation = string.IsNullOrEmpty(settings.Animation) ? "slide" : settings.Animation;
+    decimal animationSpeed = settings.Speed == 0 ? 700 : settings.Speed;
+    string easing = string.IsNullOrEmpty(settings.Easing) ? "swing" : settings.Easing;
+    string direction = string.IsNullOrEmpty(settings.Direction) ? "horizontal" : settings.Direction;
+    decimal slideshowSpeed = settings.SlideDuration == 0 ? 6000 : settings.SlideDuration;
+}
+<script type="text/javascript">
+
+    function fullScreenSlider() {
+        if ($('.fullscreen-carousel').length > 0) {
+
+            $('.fullscreen-carousel').flexslider({
+                    animation: "@animation",
+                    animationSpeed: @animationSpeed,
+                    animationLoop: true,
+                    direction:"@direction",
+                    slideshow: true,
+                    slideshowSpeed: @slideshowSpeed,
+                    easing: "@easing",
+                    controlNav: false,
+                    before: function (slider) {
+                        //   $('.fullscreen-carousel .overlay-hero .caption-hero').fadeOut();
+                        $('.fullscreen-carousel .overlay-hero .caption-hero').fadeOut().animate({ top: '80px' }, { queue: false, easing: 'easeOutQuad', duration: 700 });
+                                slider.slides.eq(slider.currentSlide).delay(400);
+                                slider.slides.eq(slider.animatingTo).delay(400);
+                    },
+                    after: function (slider) {
+                        //$('.fullscreen-carousel .flex-active-slide').find('.caption-hero').delay().fadeIn(1500);
+                        $('.fullscreen-carousel .flex-active-slide').find('.caption-hero').fadeIn(2000).animate({ top: '0' }, { queue: false, easing: 'easeOutQuad', duration: 1200 });
+                                BackgroundCheck.refresh();
+                    },
+                    start: function (slider) {
+                        $('body').removeClass('loading');
+                                BackgroundCheck.init({
+                                targets: '.full-intro',
+                            images: '.flexslider li img',
+                    });
+                },
+                useCSS: true,
+            });
+        };
+        fullScreenCarousel();
+        function fullScreenCarousel() {
+            var windowWidth = $(window).width();
+            var windowHeight = $(window).height();
+
+            if ($(window).width() > 767) {
+                $('.hero-slider-1 .slides li').css("height", windowHeight);
+            }
+            else {
+                $('.hero-slider-1 .slides li').css("height", '400px');
+            }
+        };
+
+        $(window).resize(function () {
+            fullScreenCarousel();
+        });
+    };
+</script>
