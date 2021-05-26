@@ -1,4 +1,4 @@
-<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="..\packages\uSync.8.9.1\build\uSync.props" Condition="Exists('..\packages\uSync.8.9.1\build\uSync.props')" />
   <Import Project="..\packages\UmbracoCms.8.12.2\build\UmbracoCms.props" Condition="Exists('..\packages\UmbracoCms.8.12.2\build\UmbracoCms.props')" />
   <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.2.0.1\build\net46\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
@@ -1222,6 +1222,7 @@
     <Content Include="uSync\v8\Templates\sitetemplate.config" />
     <Content Include="uSync\v8\usync.config" />
     <Content Include="Scripts\plugin\swiper.min.js.map" />
+    <None Include="Properties\PublishProfiles\umazeldemo.umbhost.net - Web Deploy.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
